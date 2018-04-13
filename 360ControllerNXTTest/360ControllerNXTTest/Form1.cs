@@ -46,6 +46,7 @@ namespace _360ControllerNXTTest
                 double leftMotorSpeed = 10;
                 double rightMotorSpeed = 10;
                 selectedController.Vibrate(leftMotorSpeed, rightMotorSpeed, TimeSpan.FromSeconds(2.0));
+                
             }
             catch(Exception e1)
             {
@@ -82,6 +83,7 @@ namespace _360ControllerNXTTest
                 nxt.Connection.Open();
                 nxt.MotorA.On(20);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorA.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
@@ -96,8 +98,9 @@ namespace _360ControllerNXTTest
             try
             {
                 nxt.Connection.Open();
-                nxt.MotorC.On(20);
+                nxt.MotorC.On(10);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorC.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
@@ -114,6 +117,7 @@ namespace _360ControllerNXTTest
                 nxt.Connection.Open();
                 nxt.MotorB.On(20);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorB.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
@@ -130,6 +134,7 @@ namespace _360ControllerNXTTest
                 nxt.Connection.Open();
                 nxt.MotorB.On(-20);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorB.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
@@ -144,8 +149,9 @@ namespace _360ControllerNXTTest
             try
             {
                 nxt.Connection.Open();
-                nxt.MotorC.On(-20);
+                nxt.MotorC.On(-10);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorC.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
@@ -162,6 +168,7 @@ namespace _360ControllerNXTTest
                 nxt.Connection.Open();
                 nxt.MotorA.On(-20);
                 System.Threading.Thread.Sleep(1000);
+                nxt.MotorA.Off();
                 nxt.Connection.Close();
             }
             catch (Exception e1)
