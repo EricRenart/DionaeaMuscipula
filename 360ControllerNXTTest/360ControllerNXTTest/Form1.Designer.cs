@@ -36,6 +36,7 @@
             this.ttLeftButton = new System.Windows.Forms.Button();
             this.boomDownButton = new System.Windows.Forms.Button();
             this.ttRightButton = new System.Windows.Forms.Button();
+            this.startControllerInputButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // nxtTestButton
@@ -126,11 +127,24 @@
             this.ttRightButton.UseVisualStyleBackColor = true;
             this.ttRightButton.Click += new System.EventHandler(this.ttRightButton_Click);
             // 
+            // startControllerInputButton
+            // 
+            this.startControllerInputButton.BackColor = System.Drawing.Color.IndianRed;
+            this.startControllerInputButton.Location = new System.Drawing.Point(11, 321);
+            this.startControllerInputButton.Margin = new System.Windows.Forms.Padding(2);
+            this.startControllerInputButton.Name = "startControllerInputButton";
+            this.startControllerInputButton.Size = new System.Drawing.Size(297, 75);
+            this.startControllerInputButton.TabIndex = 11;
+            this.startControllerInputButton.Text = "Controller: SAFE";
+            this.startControllerInputButton.UseVisualStyleBackColor = false;
+            this.startControllerInputButton.Click += new System.EventHandler(this.startControllerInputButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(319, 315);
+            this.ClientSize = new System.Drawing.Size(319, 407);
+            this.Controls.Add(this.startControllerInputButton);
             this.Controls.Add(this.ttRightButton);
             this.Controls.Add(this.boomDownButton);
             this.Controls.Add(this.ttLeftButton);
@@ -157,6 +171,7 @@
         private System.Windows.Forms.Button ttLeftButton;
         private System.Windows.Forms.Button boomDownButton;
         private System.Windows.Forms.Button ttRightButton;
+        private System.Windows.Forms.Button startControllerInputButton;
     }
 }
 

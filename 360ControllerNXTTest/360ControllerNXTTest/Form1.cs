@@ -15,14 +15,19 @@ namespace _360ControllerNXTTest
 {
     public partial class Form1 : Form
     {
+        const string PORT = "com6";
+        bool isControllerEnabled;
+        XboxController selectedController;
+       
         public Form1()
         {
             InitializeComponent();
+            isControllerEnabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
             try
             {
                 motorTestSequence(nxt, 20, 3000);
@@ -42,7 +47,7 @@ namespace _360ControllerNXTTest
         {
             try
             {
-                var selectedController = XboxController.RetrieveController(0);
+                selectedController = XboxController.RetrieveController(0);
                 double leftMotorSpeed = 10;
                 double rightMotorSpeed = 10;
                 selectedController.Vibrate(leftMotorSpeed, rightMotorSpeed, TimeSpan.FromSeconds(2.0));
@@ -77,104 +82,227 @@ namespace _360ControllerNXTTest
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
-                nxt.Connection.Open();
-                nxt.MotorA.On(20);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorA.Off();
-                nxt.Connection.Close();
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.Message);
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorA.On(20);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorA.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
             }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
-                nxt.Connection.Open();
-                nxt.MotorC.On(10);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorC.Off();
-                nxt.Connection.Close();
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.Message);
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorC.On(10);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorC.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
             }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
-                nxt.Connection.Open();
-                nxt.MotorB.On(20);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorB.Off();
-                nxt.Connection.Close();
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.Message);
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorB.On(20);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorB.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
             }
         }
 
         private void boomDownButton_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
-                nxt.Connection.Open();
-                nxt.MotorB.On(-20);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorB.Off();
-                nxt.Connection.Close();
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.Message);
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorB.On(-20);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorB.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
             }
         }
 
         private void rPincerCloseButton_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
-                nxt.Connection.Open();
-                nxt.MotorC.On(-10);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorC.Off();
-                nxt.Connection.Close();
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.Message);
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorC.On(-10);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorC.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
             }
         }
 
         private void ttRightButton_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
-            try
+            if (!isControllerEnabled)
             {
+                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+                try
+                {
+                    nxt.Connection.Open();
+                    nxt.MotorA.On(-20);
+                    System.Threading.Thread.Sleep(1000);
+                    nxt.MotorA.Off();
+                    nxt.Connection.Close();
+                }
+                catch (Exception e1)
+                {
+                    MessageBox.Show(e1.Message);
+                }
+            }
+        }
+
+        private void startControllerInputButton_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+            
+            selectedController = XboxController.RetrieveController(0);
+            
+            if (!isControllerEnabled)
+            {
+                isControllerEnabled = true;
+                UpdateButton("Controller: ARMED", System.Drawing.Color.LawnGreen);
                 nxt.Connection.Open();
-                nxt.MotorA.On(-20);
-                System.Threading.Thread.Sleep(1000);
-                nxt.MotorA.Off();
-                nxt.Connection.Close();
+                XboxController.StartPolling();
+                // hand off control to the 360 controller in the following loop
             }
-            catch (Exception e1)
+            else
             {
-                MessageBox.Show(e1.Message);
+                isControllerEnabled = false;
+                UpdateButton("Controller: SAFE", System.Drawing.Color.IndianRed);
+                nxt.Connection.Close();
+                XboxController.StopPolling();
             }
+
+            while (isControllerEnabled)
+            {
+                // this loop runs while isControllerEnabled == true
+                bool clawToggle = false; // init to closed
+                //const int CLAW_MOVE_INTERVAL = 750;
+                const int CLAW_SPEED = 10;
+                const int ARM_SPEED = 20;
+                while (selectedController.IsDPadRightPressed)
+                {
+                    // move turntable right
+                    nxt.MotorA.On(-1*ARM_SPEED);
+                    UpdateButton("Right button pressed", System.Drawing.Color.AliceBlue);
+                }
+                while (selectedController.IsDPadLeftPressed)
+                {
+                    nxt.MotorA.On(ARM_SPEED);
+                    UpdateButton("Left button pressed", System.Drawing.Color.AliceBlue);
+                }
+                while (selectedController.IsDPadUpPressed)
+                {
+                    nxt.MotorB.On(-1*ARM_SPEED);
+                    UpdateButton("Up button pressed",System.Drawing.Color.AliceBlue);
+                }
+                while (selectedController.IsDPadDownPressed)
+                {
+                    nxt.MotorB.On(ARM_SPEED);
+                    UpdateButton("Down button pressed", System.Drawing.Color.AliceBlue);
+                }
+
+                /*
+                if (selectedController.IsAPressed)
+                {
+                    UpdateButton("A down", System.Drawing.Color.GreenYellow);
+                    if (!clawToggle)
+                    {
+                        // open the claw
+                        nxt.MotorC.On(10);
+                        System.Threading.Thread.Sleep(CLAW_MOVE_INTERVAL);
+                        nxt.MotorC.Off();
+                    }
+                    else
+                    {
+                        // close the claw
+                        nxt.MotorC.On(10);
+                        System.Threading.Thread.Sleep(-1 * CLAW_MOVE_INTERVAL);
+                        nxt.MotorC.Off();
+                    }
+                }
+                */
+                while(selectedController.IsAPressed)
+                {
+                    nxt.MotorC.On(CLAW_SPEED);
+                }
+                while(selectedController.IsYPressed)
+                {
+                    nxt.MotorC.On(-1*CLAW_SPEED);
+                }
+
+                if(selectedController.IsBPressed)
+                {
+                    // Abort!
+                    nxt.MotorA.Off();
+                    nxt.MotorB.Off();
+                    XboxController.StopPolling();
+                    isControllerEnabled = false;
+                    System.Console.WriteLine("Control sequence aborted.");
+                    break;
+                }
+                if (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning()) { 
+                    nxt.MotorA.Off();
+                    nxt.MotorB.Off();
+                    nxt.MotorC.Off();
+                }
+            }
+        }
+
+        // Updates the controller button to provide feedback to the user
+        private void UpdateButton(string text, System.Drawing.Color color)
+        {
+            startControllerInputButton.Text = text;
+            startControllerInputButton.BackColor = color;
         }
     }
 }
