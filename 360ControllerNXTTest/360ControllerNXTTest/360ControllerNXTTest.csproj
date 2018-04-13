@@ -87,4 +87,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)..\monobrick\hidapi.dll" "$(TargetDir)" /i /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
