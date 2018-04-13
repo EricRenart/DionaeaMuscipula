@@ -22,13 +22,10 @@ namespace _360ControllerNXTTest
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com3");
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
             try
             {
-                nxt.Connection.Open();
-                nxt.MotorB.On(40);
-                System.Threading.Thread.Sleep(2000);
-                nxt.MotorB.Off();
+                motorTestSequence(nxt, 20, 3000);
             }
             catch(Exception e1)
             {
@@ -41,7 +38,7 @@ namespace _360ControllerNXTTest
             
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             try
             {
@@ -51,6 +48,123 @@ namespace _360ControllerNXTTest
                 selectedController.Vibrate(leftMotorSpeed, rightMotorSpeed, TimeSpan.FromSeconds(2.0));
             }
             catch(Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void motorTestSequence(Brick<Sensor,Sensor,Sensor,Sensor> brick, int power, int delay)
+        {
+            brick.Connection.Open();
+            brick.MotorA.On((sbyte)power);
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorA.On((sbyte)(power * -1));
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorA.Off();
+            brick.MotorB.On((sbyte)power);
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorB.On((sbyte)(power * -1));
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorB.Off();
+            brick.MotorC.On((sbyte)power);
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorC.On((sbyte)(power * -1));
+            System.Threading.Thread.Sleep(delay);
+            brick.MotorC.Off();
+            brick.Connection.Close();
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorA.On(20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorC.On(20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorB.On(20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void boomDownButton_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorB.On(-20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void rPincerCloseButton_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorC.On(-20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.Message);
+            }
+        }
+
+        private void ttRightButton_Click(object sender, EventArgs e)
+        {
+            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>("com6");
+            try
+            {
+                nxt.Connection.Open();
+                nxt.MotorA.On(-20);
+                System.Threading.Thread.Sleep(1000);
+                nxt.Connection.Close();
+            }
+            catch (Exception e1)
             {
                 MessageBox.Show(e1.Message);
             }
