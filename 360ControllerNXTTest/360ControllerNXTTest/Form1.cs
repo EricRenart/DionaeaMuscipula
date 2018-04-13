@@ -15,13 +15,14 @@ namespace _360ControllerNXTTest
 {
     public partial class Form1 : Form
     {
-        const string PORT = "com6";
+        const string PORT = "usb";
         bool isControllerEnabled;
         XboxController selectedController;
        
         public Form1()
         {
             InitializeComponent();
+            
             isControllerEnabled = false;
         }
 
