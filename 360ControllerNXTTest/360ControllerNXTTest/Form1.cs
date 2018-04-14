@@ -251,36 +251,16 @@ namespace _360ControllerNXTTest
                     nxt.MotorB.On(ARM_SPEED);
                     UpdateButton("Down button pressed", System.Drawing.Color.AliceBlue);
                 }
-
-                /*
-                if (selectedController.IsAPressed)
-                {
-                    UpdateButton("A down", System.Drawing.Color.GreenYellow);
-                    if (!clawToggle)
-                    {
-                        // open the claw
-                        nxt.MotorC.On(10);
-                        System.Threading.Thread.Sleep(CLAW_MOVE_INTERVAL);
-                        nxt.MotorC.Off();
-                    }
-                    else
-                    {
-                        // close the claw
-                        nxt.MotorC.On(10);
-                        System.Threading.Thread.Sleep(-1 * CLAW_MOVE_INTERVAL);
-                        nxt.MotorC.Off();
-                    }
-                }
-                */
-                while(selectedController.IsAPressed)
+                
+                while(selectedController.IsLeftShoulderPressed)
                 {
                     nxt.MotorC.On(CLAW_SPEED);
                 }
-                while(selectedController.IsYPressed)
+                while(selectedController.IsRightShoulderPressed)
                 {
                     nxt.MotorC.On(-1*CLAW_SPEED);
                 }
-
+                
                 if(selectedController.IsBPressed)
                 {
                     // Abort!
