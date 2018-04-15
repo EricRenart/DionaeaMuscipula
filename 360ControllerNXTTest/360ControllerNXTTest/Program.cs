@@ -8,6 +8,7 @@ namespace _360ControllerNXTTest
 {
     static class Program
     {
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
