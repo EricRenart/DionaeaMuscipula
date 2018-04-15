@@ -285,5 +285,12 @@ namespace _360ControllerNXTTest
             startControllerInputButton.Text = text;
             startControllerInputButton.BackColor = color;
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            // Ultrasonic Sensor Details button
+            SensorStatus sensStatus = new SensorStatus();
+            sensStatus.Show();
+        }
     }
 }

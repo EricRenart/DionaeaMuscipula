@@ -28,3 +28,4 @@ C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTT
 C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.csproj.CopyComplete
 C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.exe
 C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.pdb
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\_360ControllerNXTTest.SensorStatus.resources
