@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MonoBrick.NXT;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +13,12 @@ namespace _360ControllerNXTTest
 {
     public partial class SensorStatus : Form
     {
-        public SensorStatus()
+
+        Sensor sensor;
+        
+        public SensorStatus(Sensor s)
         {
+            sensor = s;
             InitializeComponent();
         }
 
@@ -30,6 +35,17 @@ namespace _360ControllerNXTTest
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void setSensButton_Click(object sender, EventArgs e)
+        {
+            int sensDialogValue = (int)setSensBox.Value;
+            
+        }
+
+        public void UpdateCurrentUltrasonicSensorValue()
+        {
+            curerntSensReadingLabel.Text = sensor.ReadAsString();
         }
     }
 }

@@ -84,6 +84,7 @@
             this.setSensButton.TabIndex = 4;
             this.setSensButton.Text = "Set";
             this.setSensButton.UseVisualStyleBackColor = true;
+            this.setSensButton.Click += new System.EventHandler(this.setSensButton_Click);
             // 
             // currSensLabel
             // 

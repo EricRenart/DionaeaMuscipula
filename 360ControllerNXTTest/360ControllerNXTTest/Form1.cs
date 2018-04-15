@@ -17,18 +17,20 @@ namespace _360ControllerNXTTest
     {
         const string PORT = "usb";
         bool isControllerEnabled;
+        Brick<Sensor, Sensor, Sensor, Sensor> nxt;
         XboxController selectedController;
+        
        
         public Form1()
         {
+            nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+            nxt.Sensor4 = new NXTLightSensor();
             InitializeComponent();
-            
             isControllerEnabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
             try
             {
                 motorTestSequence(nxt, 20, 3000);
@@ -85,7 +87,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -105,7 +106,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -125,7 +125,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -145,7 +144,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -165,7 +163,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -185,7 +182,6 @@ namespace _360ControllerNXTTest
         {
             if (!isControllerEnabled)
             {
-                var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
                 try
                 {
                     nxt.Connection.Open();
@@ -203,8 +199,6 @@ namespace _360ControllerNXTTest
 
         private void startControllerInputButton_Click(object sender, EventArgs e)
         {
-            var nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
-            
             selectedController = XboxController.RetrieveController(0);
             
             if (!isControllerEnabled)
@@ -289,7 +283,7 @@ namespace _360ControllerNXTTest
         private void button1_Click_1(object sender, EventArgs e)
         {
             // Ultrasonic Sensor Details button
-            SensorStatus sensStatus = new SensorStatus();
+            SensorStatus sensStatus = new SensorStatus(nxt.Sensor4);
             sensStatus.Show();
         }
     }
