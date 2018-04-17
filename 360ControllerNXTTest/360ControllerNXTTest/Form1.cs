@@ -286,5 +286,10 @@ namespace _360ControllerNXTTest
             SensorStatus sensStatus = new SensorStatus(nxt.Sensor4);
             sensStatus.Show();
         }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
