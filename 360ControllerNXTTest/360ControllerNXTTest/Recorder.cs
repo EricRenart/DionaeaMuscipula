@@ -3,68 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using _360ControllerNXTTest;
 using MonoBrick.NXT;
 
 namespace _360ControllerNXTTest
 { 
-    class RecorderThread
-    {
-        static int[] motorABuffer;
-        static int[] motorBBuffer;
-        static int[] motorCBuffer;
-
-        public void Record()
-        {
-            int step = 0;
-            motorABuffer = new int[2 * Recorder.GetDuration()];
-            motorBBuffer = new int[2 * Recorder.GetDuration()];
-            motorCBuffer = new int[2 * Recorder.GetDuration()];
-            Recorder.ResetTachos();
-            while(step < 2* Recorder.GetDuration())
-            {
-                // add positions of motors to motorBuffers every 1/2 sec
-                Console.WriteLine("-----------------------------------");
-                motorABuffer[step - 1] = Recorder.GetBrick().MotorA.GetTachoCount();
-                Console.WriteLine("A: " + motorABuffer[step - 1]);
-                motorBBuffer[step - 1] = Recorder.GetBrick().MotorB.GetTachoCount();
-                Console.WriteLine("B: " + motorABuffer[step - 1]);
-                motorCBuffer[step - 1] = Recorder.GetBrick().MotorC.GetTachoCount();
-                Console.WriteLine("C: " + motorABuffer[step - 1]);
-                Thread.Sleep(500);
-                step++;
-            }
-
-            // dump data to Recorder class once done
-            Recorder.CopyThreadRecordingData(this);
-            Console.WriteLine("Recorder thread finished.");
-            Recorder.Unlock();
-        }
-
-
-
-        public int[] getABuffer()
-        {
-            return motorABuffer;
-        }
-        public int[] getBBuffer()
-        {
-            return motorBBuffer;
-        }
-        public int[] getCBuffer()
-        {
-            return motorCBuffer;
-        }
-    }
-
     class Recorder
     {
-        static Brick<Sensor,Sensor,Sensor,Sensor> nxt;
-        static int[] motorAHistory;
-        static int[] motorBHistory;
-        static int[] motorCHistory;
-        static bool full;
-        static bool locked;
-        static int duration;
+        Brick<Sensor,Sensor,Sensor,Sensor> nxt;
+        Thread actualRecorderThread;
+        int[] motorAHistory;
+        int[] motorBHistory;
+        int[] motorCHistory;
+        bool full;
+        bool locked;
+        int duration;
 
         public Recorder(Brick<Sensor,Sensor,Sensor,Sensor> brick, int seconds)
         {
@@ -77,18 +30,24 @@ namespace _360ControllerNXTTest
             locked = false;
         }
 
-        public static void StartRecording()
+        public void StartRecording()
         {
             if(!full) {
                 Console.WriteLine("Starting recorder thread...");
                 Lock();
-                RecorderThread rt = new RecorderThread();
-                Thread recorderThread = new Thread(new ThreadStart(rt.Record));
-                recorderThread.Start();
+                RecorderThread rt = new RecorderThread(this);
+                actualRecorderThread = new Thread(new ThreadStart(rt.Record));
+                actualRecorderThread.Start();
             }
         }
 
-        public static void PlaybackRecording()
+        public void StopRecording()
+        {
+            actualRecorderThread.Abort();
+            Unlock();
+        }
+
+        public void PlaybackRecording()
         {
             if(!full) {
                 Console.WriteLine("There is no motor data to play back.");
@@ -105,21 +64,41 @@ namespace _360ControllerNXTTest
                 int cPos = 0;
                 while(step < 2*duration)
                 {
-                    aPos = motorAHistory[step - 1];
-                    bPos = motorBHistory[step - 1];
-                    cPos = motorCHistory[step - 1];
-                    nxt.MotorA.MoveTo(10, aPos, false);
-                    nxt.MotorB.MoveTo(10, bPos, false);
-                    nxt.MotorC.MoveTo(10, cPos, false);
-                    Thread.Sleep(500);
-                    step++;
+                    aPos = motorAHistory[step];
+                    bPos = motorBHistory[step];
+                    cPos = motorCHistory[step];
+                    Console.WriteLine("---------------------------");
+                    Console.WriteLine("Step # " + step);
+
+                    if (step + 1 > (2 * duration)-1) { break; }
+                    else
+                    {
+
+                        uint dA = (uint)(aPos - motorAHistory[step + 1]);
+                        uint dB = (uint)(bPos - motorBHistory[step + 1]);
+                        uint dC = (uint)(cPos - motorCHistory[step + 1]);
+
+                        if (aPos - motorAHistory[step + 1] < 0) { nxt.MotorA.On(-10, dA); }
+                        else { nxt.MotorA.On(10, dA); }
+                        Console.WriteLine("A: " + aPos);
+
+                        if (bPos - motorBHistory[step + 1] < 0) { nxt.MotorB.On(-10, dB); }
+                        else { nxt.MotorB.On(10, dB); }
+                        Console.WriteLine("B: " + bPos);
+
+                        if (cPos - motorCHistory[step + 1] < 0) { nxt.MotorC.On(-10, dC); }
+                        else { nxt.MotorC.On(10, dC); }
+                        Console.WriteLine("C: " + cPos);
+                        Thread.Sleep(500);
+                        step++;
+                    }
                 }
                 Console.WriteLine("Sequence playback finished.");
                 ClearStoredCommands();
             }
         }
 
-        public static void ClearStoredCommands()
+        public void ClearStoredCommands()
         {
             if (locked)
             {
@@ -134,7 +113,7 @@ namespace _360ControllerNXTTest
             }
         }
 
-        public static void CopyThreadRecordingData(RecorderThread rt)
+        public void CopyThreadRecordingData(RecorderThread rt)
         {
             motorAHistory = rt.getABuffer();
             motorBHistory = rt.getBBuffer();
@@ -142,31 +121,36 @@ namespace _360ControllerNXTTest
             full = true;
         }
 
-        public static Brick<Sensor,Sensor,Sensor,Sensor> GetBrick()
+        public Brick<Sensor,Sensor,Sensor,Sensor> GetBrick()
         {
             return nxt;
         }
 
-        public static int GetDuration()
+        public int GetDuration()
         {
             return duration;
         }
 
-        public static void ResetTachos()
+        public  void ResetTachos()
         {
             nxt.MotorA.ResetTacho();
             nxt.MotorB.ResetTacho();
             nxt.MotorC.ResetTacho();
         }
 
-        public static void Lock()
+        public void Lock()
         {
             locked = true;
         }
 
-        public static void Unlock()
+        public void Unlock()
         {
             locked = false;
+        }
+
+        public bool IsLocked()
+        {
+            return locked;
         }
     }
 }
