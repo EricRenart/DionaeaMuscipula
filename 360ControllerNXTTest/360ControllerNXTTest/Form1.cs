@@ -5,11 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MonoBrick.NXT;
 using J2i.Net.XInputWrapper;
-
+using System.Threading;
 
 namespace _360ControllerNXTTest
 {
@@ -18,15 +17,17 @@ namespace _360ControllerNXTTest
         const string PORT = "usb";
         bool isControllerEnabled;
         Brick<Sensor, Sensor, Sensor, Sensor> nxt;
+        Recorder recorder;
         XboxController selectedController;
-        
-       
+        Thread actualControllerThread;
+
+
         public Form1()
         {
             nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
             nxt.Sensor4 = new NXTLightSensor();
+            recorder = new Recorder(nxt,15); // Hardcoded for now
             InitializeComponent();
-            
             isControllerEnabled = false;
         }
 
@@ -200,77 +201,17 @@ namespace _360ControllerNXTTest
 
         private void startControllerInputButton_Click(object sender, EventArgs e)
         {
-            selectedController = XboxController.RetrieveController(0);
-            
             if (!isControllerEnabled)
             {
-                isControllerEnabled = true;
-                UpdateButton("Controller: ARMED", System.Drawing.Color.LawnGreen);
-                nxt.Connection.Open();
-                XboxController.StartPolling();
-                // hand off control to the 360 controller in the following loop
+                selectedController = XboxController.RetrieveController(0);
+                ControllerThread cThread = new ControllerThread(nxt, selectedController);
+                actualControllerThread = new Thread(new ThreadStart(cThread.StartControllerInput));
+                actualControllerThread.Start();
             }
             else
             {
+                actualControllerThread.Abort();
                 isControllerEnabled = false;
-                UpdateButton("Controller: SAFE", System.Drawing.Color.IndianRed);
-                nxt.Connection.Close();
-                XboxController.StopPolling();
-            }
-
-            while (isControllerEnabled)
-            {
-                // this loop runs while isControllerEnabled == true
-                bool clawToggle = false; // init to closed
-                //const int CLAW_MOVE_INTERVAL = 750;
-                const int CLAW_SPEED = 10;
-                const int ARM_SPEED = 20;
-                while (selectedController.IsDPadRightPressed)
-                {
-                    // move turntable right
-                    nxt.MotorA.On(-1*ARM_SPEED);
-                    UpdateButton("Right button pressed", System.Drawing.Color.AliceBlue);
-                }
-                while (selectedController.IsDPadLeftPressed)
-                {
-                    nxt.MotorA.On(ARM_SPEED);
-                    UpdateButton("Left button pressed", System.Drawing.Color.AliceBlue);
-                }
-                while (selectedController.IsDPadUpPressed)
-                {
-                    nxt.MotorB.On(-1*ARM_SPEED);
-                    UpdateButton("Up button pressed",System.Drawing.Color.AliceBlue);
-                }
-                while (selectedController.IsDPadDownPressed)
-                {
-                    nxt.MotorB.On(ARM_SPEED);
-                    UpdateButton("Down button pressed", System.Drawing.Color.AliceBlue);
-                }
-                
-                while(selectedController.IsLeftShoulderPressed)
-                {
-                    nxt.MotorC.On(CLAW_SPEED);
-                }
-                while(selectedController.IsRightShoulderPressed)
-                {
-                    nxt.MotorC.On(-1*CLAW_SPEED);
-                }
-                
-                if(selectedController.IsBPressed)
-                {
-                    // Abort!
-                    nxt.MotorA.Off();
-                    nxt.MotorB.Off();
-                    XboxController.StopPolling();
-                    isControllerEnabled = false;
-                    System.Console.WriteLine("Control sequence aborted.");
-                    break;
-                }
-                if (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning()) { 
-                    nxt.MotorA.Off();
-                    nxt.MotorB.Off();
-                    nxt.MotorC.Off();
-                }
             }
         }
 
@@ -290,7 +231,28 @@ namespace _360ControllerNXTTest
 
         private void button2_Click_1(object sender, EventArgs e)
         {
+            // Record button
 
+            // stop all motors
+            nxt.MotorA.Off();
+            nxt.MotorB.Off();
+            nxt.MotorC.Off();
+
+            // start recording
+            recorder.StartRecording();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            // Playback button
+            if (recorder.IsLocked())
+            {
+                Console.WriteLine("Please wait until recording length has finished.");
+            }
+            else
+            {
+                recorder.PlaybackRecording();
+            }
         }
     }
 }
