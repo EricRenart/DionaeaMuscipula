@@ -77,24 +77,24 @@ namespace _360ControllerNXTTest
 
                         if (aPos < 0) { 
                             if (aPos != 0) {
-                                nxt.MotorA.On(-10, (uint)Math.Abs(aPos));
+                                nxt.MotorA.On(-20, (uint)Math.Abs(aPos));
                             }
                         }
                         else {
                             if (aPos != 0) {
-                                    nxt.MotorA.On(10, (uint)aPos);
+                                    nxt.MotorA.On(20, (uint)aPos);
                                 }
                             }
                         Console.WriteLine("dA: " + aPos);
 
                         if (bPos < 0) {
                             if (bPos != 0) {
-                                nxt.MotorB.On(-10, (uint)Math.Abs(bPos));
+                                nxt.MotorB.On(-20, (uint)Math.Abs(bPos));
                             }
                         }
                         else {
                             if (bPos != 0) {
-                                nxt.MotorB.On(10, (uint)bPos);
+                                nxt.MotorB.On(20, (uint)bPos);
                             }
                         }
                         Console.WriteLine("dB: " + bPos);
@@ -102,13 +102,13 @@ namespace _360ControllerNXTTest
                         if (cPos < 0) {
                             if (cPos != 0)
                             {
-                                nxt.MotorC.On(-20, (uint)Math.Abs(cPos));
+                                nxt.MotorC.On(-10, (uint)Math.Abs(cPos));
                             }
                         }
                         else {
                             if (cPos != 0)
                             {
-                                nxt.MotorC.On(20, (uint)cPos);
+                                nxt.MotorC.On(10, (uint)cPos);
                             }
                         }
                         Console.WriteLine("dC: " + cPos);

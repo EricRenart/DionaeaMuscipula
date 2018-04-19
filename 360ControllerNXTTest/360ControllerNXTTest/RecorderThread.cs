@@ -46,7 +46,9 @@ namespace _360ControllerNXTTest
 
             // dump data to recorder class once done
             recorder.CopyThreadRecordingData(this);
-            Console.WriteLine("recorder thread finished.");
+            Console.WriteLine("Recorder thread finished.");
+            Console.WriteLine("Please return arm to starting position within 10 seconds.");
+            Thread.Sleep(10000);
             brick.Connection.Close();
             recorder.Unlock();
         }
