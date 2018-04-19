@@ -35,7 +35,7 @@ namespace _360ControllerNXTTest
             if(!full) {
                 Console.WriteLine("Starting recorder thread...");
                 Lock();
-                RecorderThread rt = new RecorderThread(this);
+                RecorderThread rt = new RecorderThread(nxt,this);
                 actualRecorderThread = new Thread(new ThreadStart(rt.Record));
                 actualRecorderThread.Start();
             }
@@ -58,6 +58,7 @@ namespace _360ControllerNXTTest
             }
             else {
                 Console.WriteLine("Playing back motion sequence...");
+                nxt.Connection.Open();
                 int step = 0;
                 int aPos = 0;
                 int bPos = 0;
@@ -74,26 +75,50 @@ namespace _360ControllerNXTTest
                     else
                     {
 
-                        uint dA = (uint)(aPos - motorAHistory[step + 1]);
-                        uint dB = (uint)(bPos - motorBHistory[step + 1]);
-                        uint dC = (uint)(cPos - motorCHistory[step + 1]);
+                        if (aPos < 0) { 
+                            if (aPos != 0) {
+                                nxt.MotorA.On(-10, (uint)Math.Abs(aPos));
+                            }
+                        }
+                        else {
+                            if (aPos != 0) {
+                                    nxt.MotorA.On(10, (uint)aPos);
+                                }
+                            }
+                        Console.WriteLine("dA: " + aPos);
 
-                        if (aPos - motorAHistory[step + 1] < 0) { nxt.MotorA.On(-10, dA); }
-                        else { nxt.MotorA.On(10, dA); }
-                        Console.WriteLine("A: " + aPos);
+                        if (bPos < 0) {
+                            if (bPos != 0) {
+                                nxt.MotorB.On(-10, (uint)Math.Abs(bPos));
+                            }
+                        }
+                        else {
+                            if (bPos != 0) {
+                                nxt.MotorB.On(10, (uint)bPos);
+                            }
+                        }
+                        Console.WriteLine("dB: " + bPos);
 
-                        if (bPos - motorBHistory[step + 1] < 0) { nxt.MotorB.On(-10, dB); }
-                        else { nxt.MotorB.On(10, dB); }
-                        Console.WriteLine("B: " + bPos);
-
-                        if (cPos - motorCHistory[step + 1] < 0) { nxt.MotorC.On(-10, dC); }
-                        else { nxt.MotorC.On(10, dC); }
-                        Console.WriteLine("C: " + cPos);
+                        if (cPos < 0) {
+                            if (cPos != 0)
+                            {
+                                nxt.MotorC.On(-20, (uint)Math.Abs(cPos));
+                            }
+                        }
+                        else {
+                            if (cPos != 0)
+                            {
+                                nxt.MotorC.On(20, (uint)cPos);
+                            }
+                        }
+                        Console.WriteLine("dC: " + cPos);
                         Thread.Sleep(500);
+                        
                         step++;
                     }
                 }
                 Console.WriteLine("Sequence playback finished.");
+                nxt.Connection.Close();
                 ClearStoredCommands();
             }
         }
@@ -131,7 +156,9 @@ namespace _360ControllerNXTTest
             return duration;
         }
 
-        public  void ResetTachos()
+
+
+        public void ResetTachos()
         {
             nxt.MotorA.ResetTacho();
             nxt.MotorB.ResetTacho();

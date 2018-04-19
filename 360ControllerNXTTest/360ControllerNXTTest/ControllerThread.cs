@@ -36,51 +36,74 @@ namespace _360ControllerNXTTest
 
             while (isControllerEnabled)
             {
-                // this loop runs while isControllerEnabled == true
-                bool clawToggle = false; // init to closed
-                //const int CLAW_MOVE_INTERVAL = 750;
-                const int CLAW_SPEED = 10;
-                const int ARM_SPEED = 20;
-                while (controller.IsDPadRightPressed)
+                try
                 {
-                    // move turntable right
-                    brick.MotorA.On(-1 * ARM_SPEED);
-                }
-                while (controller.IsDPadLeftPressed)
-                {
-                    brick.MotorA.On(ARM_SPEED);
-                }
-                while (controller.IsDPadUpPressed)
-                {
-                    brick.MotorB.On(-1 * ARM_SPEED);
-                }
-                while (controller.IsDPadDownPressed)
-                {
-                    brick.MotorB.On(ARM_SPEED);
-                }
+                    // this loop runs while isControllerEnabled == true
+                    bool clawToggle = false; // init to closed
+                                             //const int CLAW_MOVE_INTERVAL = 750;
+                    const int CLAW_SPEED = 10;
+                    const int ARM_SPEED = 20;
+                    while (controller.IsDPadRightPressed)
+                    {
+                        // move turntable right
+                        brick.MotorA.On(-1 * ARM_SPEED);
+                    }
+                    while (controller.IsDPadLeftPressed)
+                    {
+                        brick.MotorA.On(ARM_SPEED);
+                    }
+                    while (controller.IsDPadUpPressed)
+                    {
+                        brick.MotorB.On(-1 * ARM_SPEED);
+                    }
+                    while (controller.IsDPadDownPressed)
+                    {
+                        brick.MotorB.On(ARM_SPEED);
+                    }
 
-                while (controller.IsLeftShoulderPressed)
-                {
-                    brick.MotorC.On(CLAW_SPEED);
-                }
-                while (controller.IsRightShoulderPressed)
-                {
-                    brick.MotorC.On(-1 * CLAW_SPEED);
-                }
+                    while (controller.IsLeftShoulderPressed)
+                    {
+                        brick.MotorC.On(CLAW_SPEED);
+                    }
+                    while (controller.IsRightShoulderPressed)
+                    {
+                        brick.MotorC.On(-1 * CLAW_SPEED);
+                    }
 
-                if (controller.IsBPressed)
+                    if (controller.IsBPressed)
+                    {
+                        isControllerEnabled = false;
+                        StopControllerInput();
+                        break;
+                    }
+                    if (brick.MotorA.IsRunning() || brick.MotorB.IsRunning() || brick.MotorC.IsRunning())
+                    {
+                        brick.MotorA.Off();
+                        brick.MotorB.Off();
+                        brick.MotorC.Off();
+                    }
+                }
+                catch (MonoBrick.ConnectionException ce)
                 {
+                    // automatically disable controller
                     isControllerEnabled = false;
-                    StopControllerInput();
-                    break;
-                }
-                if (brick.MotorA.IsRunning() || brick.MotorB.IsRunning() || brick.MotorC.IsRunning())
-                {
-                    brick.MotorA.Off();
-                    brick.MotorB.Off();
-                    brick.MotorC.Off();
                 }
             }
+        }
+
+        public void MotorACallback(sbyte speed)
+        {
+            brick.MotorA.On(speed);
+        }
+
+        public void MotorBCallback(sbyte speed)
+        {
+            brick.MotorB.On(speed);
+        }
+
+        public void MotorCCallback(sbyte speed)
+        {
+            brick.MotorC.On(speed);
         }
 
         public void StopControllerInput()

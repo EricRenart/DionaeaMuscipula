@@ -29,4 +29,3 @@ C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360Controll
 C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.csproj.CopyComplete
 C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.exe
 C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.pdb
-C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.csprojResolveAssemblyReference.cache
