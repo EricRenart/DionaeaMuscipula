@@ -44,46 +44,5 @@ namespace _360ControllerNXTTest
             brick.Connection.Close();
         }
 
-        public void Up(int duration)
-        {
-            brick.MotorB.On(20);
-            Thread.Sleep(duration);
-            brick.MotorB.Off();
-        }
-
-        public void Down(int duration)
-        {
-            brick.MotorB.On(-20);
-            Thread.Sleep(duration);
-            brick.MotorB.Off();
-        }
-
-        public void Left(int duration)
-        {
-            brick.MotorA.On(-20);
-            Thread.Sleep(duration);
-            brick.MotorA.Off();
-        }
-
-        public void Right(int duration)
-        {
-            brick.MotorB.On(20);
-            Thread.Sleep(duration);
-            brick.MotorB.Off();
-        }
-
-        public void OpenClaw(int duration)
-        {
-            brick.MotorC.On(10);
-            Thread.Sleep(duration);
-            brick.MotorC.Off();
-        }
-
-        public void CloseClaw(int duration)
-        {
-            brick.MotorB.On(-10);
-            Thread.Sleep(duration);
-            brick.MotorB.Off();
-        }
     }
 }
