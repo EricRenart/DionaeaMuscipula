@@ -16,13 +16,14 @@ namespace _360ControllerNXTTest
         Queue<MoveCommand> commandQueue;
         MoveCommand newCmd;
         int currentElapsedTime;
+        bool isRecording;
 
         public RobotCommunicator(Brick<Sensor, Sensor, Sensor, Sensor> initBrick, XboxController initController)
         {
             brick = initBrick;
             controller = initController;
             commandQueue = new Queue<MoveCommand>();
-
+            isRecording = false;
         }
 
         // Open a communication channel with the robot.
@@ -37,6 +38,7 @@ namespace _360ControllerNXTTest
         {
             newCmd = new MoveCommand(MoveCommandType.BLANK, 0, 20); // create a new blank command to increment
             
+            // arm/claw movement buttons
             while(controller.IsDPadLeftPressed)
             {
                 newCmd.SetCommandType(MoveCommandType.MOVE_LEFT);
@@ -73,7 +75,36 @@ namespace _360ControllerNXTTest
                 LogDuration(newCmd);
             }
 
-            AddCommand(newCmd);
+            // (X) - record button
+            while(controller.IsXPressed)
+            {
+                // toggle recording on and off
+                if (!isRecording)
+                {
+                    isRecording = true;
+                    // wait a bit so we don't bounce
+                    Thread.Sleep(50);
+                    break;
+                }
+                else
+                {
+                    isRecording = false;
+                    Thread.Sleep(50);
+                    break;
+                }
+            }
+
+            // (B) - stop button
+            if(controller.IsBPressed)
+            {
+                Stop();
+            }
+
+            // record commands if enabled
+            if(isRecording)
+            {
+                AddCommand(newCmd);
+            }
         }
 
         // Stop all movements and close the communication channel.
@@ -105,9 +136,17 @@ namespace _360ControllerNXTTest
         // Pops a command off the queue and executes it.
         public void ExecuteNextCommand()
         {
-            MoveCommand next = commandQueue.Dequeue();
-            CommandObject objToBot = next.Execute();
-            SendCommandObject(objToBot);
+            if (commandQueue.Any<MoveCommand>())
+            {
+                MoveCommand next = commandQueue.Dequeue();
+                CommandObject objToBot = next.Execute();
+                SendCommandObject(objToBot);
+            }
+            else
+            {
+                Console.WriteLine("Cannot execute: There are no MoveCommands in the queue");
+            }
+            
         }
 
         // Sends CommandObject information to the robot.
@@ -135,6 +174,16 @@ namespace _360ControllerNXTTest
                     break;
                 default:
                     throw new Exception("motorNum of this object not recognized!");
+            }
+        }
+
+        // Executes the sequence of recorded commands in the commandQueue.
+        public void ExecuteQueue()
+        {
+            Console.WriteLine("Playing back stored commands...");
+            for(int i = 0; i < commandQueue.Count; i++)
+            {
+                ExecuteNextCommand();
             }
         }
 
