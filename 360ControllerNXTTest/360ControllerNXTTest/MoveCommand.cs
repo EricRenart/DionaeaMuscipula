@@ -8,6 +8,7 @@ namespace _360ControllerNXTTest
 {
     enum MoveCommandType
     {
+        BLANK,
         MOVE_UP,
         MOVE_DOWN,
         MOVE_LEFT,
@@ -25,7 +26,7 @@ namespace _360ControllerNXTTest
 
     class MoveCommand
     {
-        int duration;
+        public int duration;
         int power;
         MoveCommandType type;
 
@@ -42,11 +43,15 @@ namespace _360ControllerNXTTest
         {
             CommandObject cobj;
             cobj.duration = this.duration;
-            if(this.type == MoveCommandType.MOVE_LEFT ||
-                this.type == MoveCommandType.MOVE_DOWN || 
-                this.type == MoveCommandType.CLOSE_CLAW )
+            if (this.type == MoveCommandType.MOVE_LEFT ||
+                this.type == MoveCommandType.MOVE_DOWN ||
+                this.type == MoveCommandType.CLOSE_CLAW)
             {
                 cobj.power = -1 * this.power;
+            }
+            if(this.type == MoveCommandType.BLANK)
+            {
+                throw new Exception("Cannot execute a blank command. Please initialize it first.");
             }
             else
             {
@@ -80,7 +85,16 @@ namespace _360ControllerNXTTest
             return cobj;
         }
 
+        public MoveCommandType GetCommandType()
+        {
+            return type;
         }
+
+        public void SetCommandType(MoveCommandType newType)
+        {
+            this.type = newType;
+        }
+        
 
     }
 }
