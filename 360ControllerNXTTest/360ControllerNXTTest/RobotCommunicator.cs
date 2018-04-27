@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using WiimoteLib;
 using MonoBrick.NXT;
 
 namespace _360ControllerNXTTest
@@ -11,6 +12,7 @@ namespace _360ControllerNXTTest
     class RobotCommunicator
     {
         Brick<Sensor, Sensor, Sensor, Sensor> brick;
+        Wiimote wiimote;
         Queue<MoveCommand> commandQueue;
         MoveCommand newCmd;
         bool isRecording;
@@ -20,6 +22,7 @@ namespace _360ControllerNXTTest
         public RobotCommunicator(Brick<Sensor, Sensor, Sensor, Sensor> initBrick)
         {
             brick = initBrick;
+            wiimote = new Wiimote();
             commandQueue = new Queue<MoveCommand>();
             isRecording = false;
             isSensorEnabled = false;
@@ -29,78 +32,15 @@ namespace _360ControllerNXTTest
         public void Start()
         {
             brick.Connection.Open();
+            wiimote.Connect();
+            wiimote.SetReportType(InputReport.IRAccel, true);
+            wiimote.SetLEDs(true, true, true, true);
             brick.Beep(300);
             isActive = true;
 
             while (isActive) {
 
-                // arm/claw movement buttons
-                while ()
-                {
-                    newCmd.SetCommandType(MoveCommandType.MOVE_LEFT);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-
-                    newCmd.SetCommandType(MoveCommandType.MOVE_RIGHT);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-                    newCmd.SetCommandType(MoveCommandType.MOVE_UP);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-                    newCmd.SetCommandType(MoveCommandType.MOVE_DOWN);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-                    newCmd.SetCommandType(MoveCommandType.OPEN_CLAW);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-                    newCmd.SetCommandType(MoveCommandType.CLOSE_CLAW);
-                    LogDuration(newCmd);
-                }
-
-                while ()
-                {
-                    // toggle recording on and off
-                    if (!isRecording)
-                    {
-                        isRecording = true;
-                        // wait a bit so we don't bounce
-                        Thread.Sleep(10);
-                        Console.WriteLine("Now recording motion sequence. Press X again to terminate recording.");
-                        break;
-                    }
-                    else
-                    {
-                        isRecording = false;
-                        Thread.Sleep(10);
-                        Console.WriteLine("Recording terminated.");
-                        break;
-                    }
-                }
-
-                // 
-                if ()
-                {
-                    brick.MotorA.Off();
-                    brick.MotorB.Off();
-                    brick.MotorC.Off();
-                    brick.Connection.Close();
-                    isActive = false;
-                }
+                
 
                 // record commands if enabled
                 if (isRecording)

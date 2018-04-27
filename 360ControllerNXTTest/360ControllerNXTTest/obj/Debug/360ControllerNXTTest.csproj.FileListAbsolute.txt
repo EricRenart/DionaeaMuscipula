@@ -32,7 +32,6 @@ C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360Controll
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\360ControllerNXTTest.exe.config
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\360ControllerNXTTest.exe
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\360ControllerNXTTest.pdb
-C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\J2i.Net.XInputWrapper.dll
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\LibUsbDotNet.dll
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\MonoBrick.dll
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Debug\MonoBrick.xml
@@ -43,3 +42,4 @@ C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTe
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.csproj.CopyComplete
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.exe
 C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.pdb
+C:\Users\Eric\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Debug\360ControllerNXTTest.csprojResolveAssemblyReference.cache
