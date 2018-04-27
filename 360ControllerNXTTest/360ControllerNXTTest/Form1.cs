@@ -15,9 +15,8 @@ namespace _360ControllerNXTTest
     public partial class Form1 : Form
     {
         const string PORT = "usb";
-        bool isControllerEnabled;
+        bool isWiimoteEnabled;
         Brick<Sensor, Sensor, Sensor, Sensor> nxt;
-        XboxController selectedController;
         RobotCommunicator communicator;
 
 
@@ -25,9 +24,8 @@ namespace _360ControllerNXTTest
         {
             InitializeComponent();
             nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
-            selectedController = XboxController.RetrieveController(1);
             // spin up a RobotCommunicator instance
-            communicator = new RobotCommunicator(nxt, selectedController);
+            communicator = new RobotCommunicator(nxt);
             Thread commThread = new Thread(new ThreadStart(communicator.Start));
             commThread.Start();
             Console.WriteLine("Robot communication thread started.");
@@ -47,7 +45,7 @@ namespace _360ControllerNXTTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
 
         }
 
@@ -55,10 +53,8 @@ namespace _360ControllerNXTTest
         {
             try
             {
-                selectedController = XboxController.RetrieveController(0);
                 double leftMotorSpeed = 10;
                 double rightMotorSpeed = 10;
-                selectedController.Vibrate(leftMotorSpeed, rightMotorSpeed, TimeSpan.FromSeconds(2.0));
                 
             }
             catch(Exception e1)
@@ -90,7 +86,7 @@ namespace _360ControllerNXTTest
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {
@@ -109,7 +105,7 @@ namespace _360ControllerNXTTest
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {
@@ -128,7 +124,7 @@ namespace _360ControllerNXTTest
 
         private void button7_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {
@@ -147,7 +143,7 @@ namespace _360ControllerNXTTest
 
         private void boomDownButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {
@@ -166,7 +162,7 @@ namespace _360ControllerNXTTest
 
         private void rPincerCloseButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {
@@ -185,7 +181,7 @@ namespace _360ControllerNXTTest
 
         private void ttRightButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
+            if (!isWiimoteEnabled)
             {
                 try
                 {

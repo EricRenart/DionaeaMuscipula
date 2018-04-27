@@ -12,130 +12,105 @@ namespace _360ControllerNXTTest
     class RobotCommunicator
     {
         Brick<Sensor, Sensor, Sensor, Sensor> brick;
-        XboxController controller;
         Queue<MoveCommand> commandQueue;
         MoveCommand newCmd;
-        int currentElapsedTime;
         bool isRecording;
         bool isSensorEnabled;
+        bool isActive;
 
-        public RobotCommunicator(Brick<Sensor, Sensor, Sensor, Sensor> initBrick, XboxController initController)
+        public RobotCommunicator(Brick<Sensor, Sensor, Sensor, Sensor> initBrick)
         {
             brick = initBrick;
-            controller = initController;
             commandQueue = new Queue<MoveCommand>();
             isRecording = false;
             isSensorEnabled = false;
         }
 
-        // Open a communication channel with the robot.
+        // Open a communication channel with the robot, and runs the main communication loop.
         public void Start()
         {
             brick.Connection.Open();
-            if(!brick.Connection.IsConnected)
-            {
-                Console.WriteLine("Couldn't connect to the NXT. This won't work");
-                Console.WriteLine("Connection status:");
-                Console.WriteLine(brick.Connection.ToString());
-            }
-            else
-            {
-                Console.WriteLine("Connection established with NXT.");
-            }
-            MainLoop();
-        }
+            brick.Beep(300);
+            isActive = true;
 
-        // Main loop method. Listen for controller inputs and move the corresponding motor.
-        public void MainLoop()
-        {
-            newCmd = new MoveCommand(MoveCommandType.BLANK, 0, 20); // create a new blank command to increment
-            
-            // arm/claw movement buttons
-            while(controller.IsDPadLeftPressed)
-            {
-                Console.WriteLine("DPad Left");
-                newCmd.SetCommandType(MoveCommandType.MOVE_LEFT);
-                LogDuration(newCmd);
-            }
+            while (isActive) {
 
-            while (controller.IsDPadRightPressed)
-            {
-                Console.WriteLine("DPad Right");
-                newCmd.SetCommandType(MoveCommandType.MOVE_RIGHT);
-                LogDuration(newCmd);
-            }
-
-            while (controller.IsDPadUpPressed)
-            {
-                Console.WriteLine("DPad Up");
-                newCmd.SetCommandType(MoveCommandType.MOVE_UP);
-                LogDuration(newCmd);
-            }
-
-            while (controller.IsDPadDownPressed)
-            {
-                Console.WriteLine("DPad Down");
-                newCmd.SetCommandType(MoveCommandType.MOVE_DOWN);
-                LogDuration(newCmd);
-            }
-
-            while (controller.IsLeftShoulderPressed)
-            {
-                Console.WriteLine("LEft Bumper");
-                newCmd.SetCommandType(MoveCommandType.OPEN_CLAW);
-                LogDuration(newCmd);
-            }
-
-            while (controller.IsRightShoulderPressed)
-            {
-                Console.WriteLine("Right Bumper");
-                newCmd.SetCommandType(MoveCommandType.CLOSE_CLAW);
-                LogDuration(newCmd);
-            }
-
-            // (X) - record button
-            while(controller.IsXPressed)
-            {
-                Console.WriteLine("X");
-                // toggle recording on and off
-                if (!isRecording)
+                // arm/claw movement buttons
+                while ()
                 {
-                    isRecording = true;
-                    // wait a bit so we don't bounce
-                    Thread.Sleep(10);
-                    Console.WriteLine("Now recording motion sequence. Press X again to terminate recording.");
-                    break;
+                    newCmd.SetCommandType(MoveCommandType.MOVE_LEFT);
+                    LogDuration(newCmd);
                 }
-                else
+
+                while ()
                 {
-                    isRecording = false;
-                    Thread.Sleep(10);
-                    Console.WriteLine("Recording terminated.");
-                    break;
+
+                    newCmd.SetCommandType(MoveCommandType.MOVE_RIGHT);
+                    LogDuration(newCmd);
                 }
-            }
 
-            // (B) - stop button
-            if(controller.IsBPressed)
-            {
-                Console.WriteLine("B");
-                Stop();
-            }
+                while ()
+                {
+                    newCmd.SetCommandType(MoveCommandType.MOVE_UP);
+                    LogDuration(newCmd);
+                }
 
-            // record commands if enabled
-            if(isRecording)
-            {
-                AddCommand(newCmd);
-            }
-        }
+                while ()
+                {
+                    newCmd.SetCommandType(MoveCommandType.MOVE_DOWN);
+                    LogDuration(newCmd);
+                }
 
-        // Stop all movements and close the communication channel.
-        public void Stop()
-        {
-            brick.MotorA.Off();
-            brick.MotorB.Off();
-            brick.MotorC.Off();
-            brick.Connection.Close();
+                while ()
+                {
+                    newCmd.SetCommandType(MoveCommandType.OPEN_CLAW);
+                    LogDuration(newCmd);
+                }
+
+                while ()
+                {
+                    newCmd.SetCommandType(MoveCommandType.CLOSE_CLAW);
+                    LogDuration(newCmd);
+                }
+
+                while ()
+                {
+                    // toggle recording on and off
+                    if (!isRecording)
+                    {
+                        isRecording = true;
+                        // wait a bit so we don't bounce
+                        Thread.Sleep(10);
+                        Console.WriteLine("Now recording motion sequence. Press X again to terminate recording.");
+                        break;
+                    }
+                    else
+                    {
+                        isRecording = false;
+                        Thread.Sleep(10);
+                        Console.WriteLine("Recording terminated.");
+                        break;
+                    }
+                }
+
+                // 
+                if ()
+                {
+                    brick.MotorA.Off();
+                    brick.MotorB.Off();
+                    brick.MotorC.Off();
+                    brick.Connection.Close();
+                    isActive = false;
+                }
+
+                // record commands if enabled
+                if (isRecording)
+                {
+                    AddCommand(newCmd);
+                }
+
+
+            }
         }
 
         // Adds a MoveCommand to the command queue with the specified power, duration in ms and direction.
