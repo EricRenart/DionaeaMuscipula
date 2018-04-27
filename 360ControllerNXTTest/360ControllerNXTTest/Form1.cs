@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MonoBrick.NXT;
-using J2i.Net.XInputWrapper;
 using System.Threading;
 
 namespace _360ControllerNXTTest

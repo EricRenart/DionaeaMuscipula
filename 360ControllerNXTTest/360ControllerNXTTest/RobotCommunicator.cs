@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using J2i.Net.XInputWrapper;
 using MonoBrick.NXT;
 
 namespace _360ControllerNXTTest

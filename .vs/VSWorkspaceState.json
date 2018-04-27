@@ -3,8 +3,9 @@
     "",
     "\\360ControllerNXTTest",
     "\\360ControllerNXTTest\\360ControllerNXTTest",
-    "\\360ControllerNXTTest\\360ControllerNXTTest\\bin"
+    "\\360ControllerNXTTest\\360ControllerNXTTest\\bin",
+    "\\360ControllerNXTTest\\360ControllerNXTTest\\bin\\Debug"
   ],
-  "SelectedNode": "\\360ControllerNXTTest\\360ControllerNXTTest.sln",
+  "SelectedNode": "\\360ControllerNXTTest\\360ControllerNXTTest\\Form1.cs",
   "PreviewInSolutionExplorer": false
 }
