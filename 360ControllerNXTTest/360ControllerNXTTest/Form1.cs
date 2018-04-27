@@ -26,7 +26,7 @@ namespace _360ControllerNXTTest
         {
             nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
             nxt.Sensor4 = new NXTLightSensor();
-            recorder = new Recorder(nxt,10); // Hardcoded for now
+            recorder = new Recorder(nxt,30); // Hardcoded for now - change recording duration here
             InitializeComponent();
             isControllerEnabled = false;
         }
