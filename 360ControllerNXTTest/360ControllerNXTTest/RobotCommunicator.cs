@@ -17,6 +17,7 @@ namespace _360ControllerNXTTest
         MoveCommand newCmd;
         int currentElapsedTime;
         bool isRecording;
+        bool isSensorEnabled;
 
         public RobotCommunicator(Brick<Sensor, Sensor, Sensor, Sensor> initBrick, XboxController initController)
         {
@@ -24,12 +25,23 @@ namespace _360ControllerNXTTest
             controller = initController;
             commandQueue = new Queue<MoveCommand>();
             isRecording = false;
+            isSensorEnabled = false;
         }
 
         // Open a communication channel with the robot.
         public void Start()
         {
             brick.Connection.Open();
+            if(!brick.Connection.IsConnected)
+            {
+                Console.WriteLine("Couldn't connect to the NXT. This won't work");
+                Console.WriteLine("Connection status:");
+                Console.WriteLine(brick.Connection.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Connection established with NXT.");
+            }
             MainLoop();
         }
 
@@ -41,36 +53,42 @@ namespace _360ControllerNXTTest
             // arm/claw movement buttons
             while(controller.IsDPadLeftPressed)
             {
+                Console.WriteLine("DPad Left");
                 newCmd.SetCommandType(MoveCommandType.MOVE_LEFT);
                 LogDuration(newCmd);
             }
 
             while (controller.IsDPadRightPressed)
             {
+                Console.WriteLine("DPad Right");
                 newCmd.SetCommandType(MoveCommandType.MOVE_RIGHT);
                 LogDuration(newCmd);
             }
 
             while (controller.IsDPadUpPressed)
             {
+                Console.WriteLine("DPad Up");
                 newCmd.SetCommandType(MoveCommandType.MOVE_UP);
                 LogDuration(newCmd);
             }
 
             while (controller.IsDPadDownPressed)
             {
+                Console.WriteLine("DPad Down");
                 newCmd.SetCommandType(MoveCommandType.MOVE_DOWN);
                 LogDuration(newCmd);
             }
 
             while (controller.IsLeftShoulderPressed)
             {
+                Console.WriteLine("LEft Bumper");
                 newCmd.SetCommandType(MoveCommandType.OPEN_CLAW);
                 LogDuration(newCmd);
             }
 
             while (controller.IsRightShoulderPressed)
             {
+                Console.WriteLine("Right Bumper");
                 newCmd.SetCommandType(MoveCommandType.CLOSE_CLAW);
                 LogDuration(newCmd);
             }
@@ -78,18 +96,21 @@ namespace _360ControllerNXTTest
             // (X) - record button
             while(controller.IsXPressed)
             {
+                Console.WriteLine("X");
                 // toggle recording on and off
                 if (!isRecording)
                 {
                     isRecording = true;
                     // wait a bit so we don't bounce
-                    Thread.Sleep(50);
+                    Thread.Sleep(10);
+                    Console.WriteLine("Now recording motion sequence. Press X again to terminate recording.");
                     break;
                 }
                 else
                 {
                     isRecording = false;
-                    Thread.Sleep(50);
+                    Thread.Sleep(10);
+                    Console.WriteLine("Recording terminated.");
                     break;
                 }
             }
@@ -97,6 +118,7 @@ namespace _360ControllerNXTTest
             // (B) - stop button
             if(controller.IsBPressed)
             {
+                Console.WriteLine("B");
                 Stop();
             }
 

@@ -17,18 +17,20 @@ namespace _360ControllerNXTTest
         const string PORT = "usb";
         bool isControllerEnabled;
         Brick<Sensor, Sensor, Sensor, Sensor> nxt;
-        Recorder recorder;
         XboxController selectedController;
-        Thread actualControllerThread;
+        RobotCommunicator communicator;
 
 
         public Form1()
         {
-            nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
-            nxt.Sensor4 = new NXTLightSensor();
-            recorder = new Recorder(nxt,30); // Hardcoded for now - change recording duration here
             InitializeComponent();
-            isControllerEnabled = false;
+            nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
+            selectedController = XboxController.RetrieveController(1);
+            // spin up a RobotCommunicator instance
+            communicator = new RobotCommunicator(nxt, selectedController);
+            Thread commThread = new Thread(new ThreadStart(communicator.Start));
+            commThread.Start();
+            Console.WriteLine("Robot communication thread started.");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -46,6 +48,7 @@ namespace _360ControllerNXTTest
         private void Form1_Load(object sender, EventArgs e)
         {
             
+
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -199,60 +202,19 @@ namespace _360ControllerNXTTest
             }
         }
 
-        private void startControllerInputButton_Click(object sender, EventArgs e)
+        private void groupBox1_Enter(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
-                selectedController = XboxController.RetrieveController(0);
-                ControllerThread cThread = new ControllerThread(nxt, selectedController);
-                actualControllerThread = new Thread(new ThreadStart(cThread.StartControllerInput));
-                actualControllerThread.Start();
-            }
-            else
-            {
-                actualControllerThread.Abort();
-                isControllerEnabled = false;
-            }
+
         }
 
-        // Updates the controller button to provide feedback to the user
-        private void UpdateButton(string text, System.Drawing.Color color)
+        private void groupBox2_Enter(object sender, EventArgs e)
         {
-            startControllerInputButton.Text = text;
-            startControllerInputButton.BackColor = color;
+
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void label3_Click(object sender, EventArgs e)
         {
-            // Ultrasonic Sensor Details button
-            SensorStatus sensStatus = new SensorStatus(nxt.Sensor4);
-            sensStatus.Show();
-        }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            // Record button
-
-            // stop all motors
-            nxt.MotorA.Off();
-            nxt.MotorB.Off();
-            nxt.MotorC.Off();
-
-            // start recording
-            recorder.StartRecording();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            // Playback button
-            if (recorder.IsLocked())
-            {
-                Console.WriteLine("Please wait until recording length has finished.");
-            }
-            else
-            {
-                recorder.PlaybackRecording();
-            }
         }
     }
 }
