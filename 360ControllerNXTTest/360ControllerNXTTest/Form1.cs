@@ -15,7 +15,7 @@ namespace _360ControllerNXTTest
 
     public partial class Form1 : Form
     {
-        const string PORT = "usb";
+        const string PORT = "com7";
         bool isActive;
         bool isRecording;
         Brick<Sensor,NXTLightSensor,NXTLightSensor,Sonar> nxt;
@@ -49,15 +49,17 @@ namespace _360ControllerNXTTest
             nxt.Connection.Open();
 
             // load sensors
-            nxt.Sensor2 = new NXTLightSensor();
-            nxt.Sensor3 = new NXTLightSensor();
+            nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
+            nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor4 = new Sonar();
 
             Console.WriteLine(nxt.Sensor2.ReadLightLevel());
             Console.WriteLine(nxt.Sensor3.ReadLightLevel());
+            
 
             // Update dialog
             UpdateReadouts();
+            
 
             if(isRecording)
             {
@@ -200,10 +202,10 @@ namespace _360ControllerNXTTest
         {
             int light1 = nxt.Sensor2.ReadLightLevel();
             int light2 = nxt.Sensor3.ReadLightLevel();
-            //int us = nxt.Sensor4.ReadDistance();
+            int us = nxt.Sensor4.ReadDistance();
             Light1Value.Text = light1.ToString();
             Light2Value.Text = light2.ToString();
-
+            UltrasonicValue.Text = us.ToString();
             // update readouts
             Light1Value.Update();
             Light2Value.Update();
