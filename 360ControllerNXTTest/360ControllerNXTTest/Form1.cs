@@ -12,42 +12,29 @@ using System.Threading;
 
 namespace _360ControllerNXTTest
 { 
-    struct SensorData
-    {
-        public int light1Pct;
-        public int light2Pct;
-        public int sonarCm;
-    }
 
     public partial class Form1 : Form
     {
         const string PORT = "usb";
         bool isActive;
         bool isRecording;
-        Brick<Sensor, Sensor, Sensor, Sensor> nxt;
-        NXTLightSensor ls1;
-        NXTLightSensor ls2;
-        Sonar sonar;
+        Brick<Sensor,NXTLightSensor,NXTLightSensor,Sonar> nxt;
         Queue<MoveCommand> commandQueue;
 
         public Form1()
         {
             InitializeComponent();
-            nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
-            ls1 = new NXTLightSensor(LightMode.Off);
-            ls2 = new NXTLightSensor(LightMode.Off);
-            sonar = new Sonar(SonarMode.Centimeter);
-            nxt.Sensor1 = ls1;
-            nxt.Sensor2 = ls2;
-            nxt.Sensor3 = sonar;
+            nxt = new Brick<Sensor,NXTLightSensor,NXTLightSensor,Sonar>(PORT);
             commandQueue = new Queue<MoveCommand>();
+            isActive = true;
+            isRecording = false;
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                motorTestSequence(nxt, 20, 3000);
+                //motorTestSequence(nxt, 20, 3000);
             }
             catch(Exception e1)
             {
@@ -57,6 +44,25 @@ namespace _360ControllerNXTTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            // First connect
+            nxt.Connection.Open();
+
+            // load sensors
+            nxt.Sensor2 = new NXTLightSensor();
+            nxt.Sensor3 = new NXTLightSensor();
+            nxt.Sensor4 = new Sonar();
+
+            Console.WriteLine(nxt.Sensor2.ReadLightLevel());
+            Console.WriteLine(nxt.Sensor3.ReadLightLevel());
+
+            // Update dialog
+            UpdateReadouts();
+
+            if(isRecording)
+            {
+                // Record stuff
+            }
             
         }
 
@@ -190,11 +196,13 @@ namespace _360ControllerNXTTest
             
         }
 
-        private void updateReadouts(SensorData newData)
+        private void UpdateReadouts()
         {
-            Light1Value.Text = newData.light1Pct.ToString();
-            Light2Value.Text = newData.light2Pct.ToString();
-            UltrasonicValue.Text = newData.sonarCm.ToString();
+            int light1 = nxt.Sensor2.ReadLightLevel();
+            int light2 = nxt.Sensor3.ReadLightLevel();
+            //int us = nxt.Sensor4.ReadDistance();
+            Light1Value.Text = light1.ToString();
+            Light2Value.Text = light2.ToString();
 
             // update readouts
             Light1Value.Update();
