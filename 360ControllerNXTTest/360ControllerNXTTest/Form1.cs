@@ -17,6 +17,7 @@ namespace _360ControllerNXTTest
     {
         const string PORT = "com7";
         Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
+        public bool isRecording;
 
         public Form1()
         {
@@ -43,12 +44,11 @@ namespace _360ControllerNXTTest
             newThread.Start();
         }
 
-        public void UpdateReadouts(int l1, int l2, int ult)
+        private void UpdateReadouts(object sender, EventArgs e)
         {
-
-            Light1Value.Text = l1.ToString();
-            Light2Value.Text = l2.ToString();
-            UltrasonicValue.Text = ult.ToString();  // update readouts
+            Light1Value.Text = brick.Sensor2.ReadAsString();
+            Light2Value.Text = brick.Sensor3.ReadAsString();
+            UltrasonicValue.Text = brick.Sensor4.ReadAsString();  // update readouts
             Light1Value.Update();
             Light2Value.Update();
             UltrasonicValue.Update();
@@ -56,7 +56,7 @@ namespace _360ControllerNXTTest
 
         private void RecordButton_Click(object sender, EventArgs e)
         {
-
+            isRecording = true;
         }
 
         private void PlaybackMovements_Click(object sender, EventArgs e)

@@ -94,7 +94,6 @@ namespace _360ControllerNXTTest
         {
             this.type = newType;
         }
-        
 
     }
 }

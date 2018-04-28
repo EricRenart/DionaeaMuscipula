@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _360ControllerNXTTest
@@ -14,8 +15,8 @@ namespace _360ControllerNXTTest
         Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
         Queue<MoveCommand> commandQueue;
         Form1 f1; // this is to update the readout
-        const int lightdiff = 5; //difference between light sensor values in order for the arm to move in a direction
-        const int sonarThreshold = 25; // minimum distance in centimenters the hand must be from the claw in order for it to start opening
+        const int lightdiff = 1; //difference between light sensor values in order for the arm to move in a direction
+        const int sonarThreshold = 25; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to start opening
 
         public RobotThread(Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> nxti, Form1 f1i)
         {
@@ -23,6 +24,7 @@ namespace _360ControllerNXTTest
             f1 = f1i;
             isActive = true;
             isRecording = false;
+            commandQueue = new Queue<MoveCommand>();
         }
 
         public void start()
@@ -38,13 +40,39 @@ namespace _360ControllerNXTTest
             // ----------- Main Loop ---------------
             while (isActive)
             {
-                // Update readouts in the Form
-                f1.UpdateReadouts(nxt.Sensor2.ReadLightLevel(), nxt.Sensor3.ReadLightLevel(), nxt.Sensor4.ReadDistance());
+                int light1 = nxt.Sensor2.ReadLightLevel();
+                int light2 = nxt.Sensor3.ReadLightLevel();
 
-                if (isRecording)
+                Console.WriteLine("["+light1+"]---+---["+light2+"]");
+
+
+                if (light2 - light1 < lightdiff)
+                {
+                    nxt.MotorA.On(-20);
+
+                }
+
+                if(light2 - light1 > lightdiff)
+                {
+                    nxt.MotorA.On(20);
+                }
+
+                if(Math.Abs(light2 - light1) <= lightdiff)
+                {
+                    nxt.MotorA.Off();
+                }
+
+                if (f1.isRecording)
                 {
                     // Record stuff
                 }
+
+                // keep the queue from overflowing
+                if(commandQueue.Count > 100000)
+                {
+                    commandQueue.Clear();
+                }
+
             }
 
             // --------- End Main Loop -------------
