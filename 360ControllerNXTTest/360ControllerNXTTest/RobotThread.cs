@@ -15,8 +15,9 @@ namespace _360ControllerNXTTest
         Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
         Queue<MoveCommand> commandQueue;
         Form1 f1; // this is to update the readout
-        const int lightdiff = 1; //difference between light sensor values in order for the arm to move in a direction
+        const int lightdiff = 4; //difference between light sensor values in order for the arm to move in a direction
         const int sonarThreshold = 25; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to start opening
+        const int clawDamp = 4;
 
         public RobotThread(Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> nxti, Form1 f1i)
         {
@@ -33,8 +34,8 @@ namespace _360ControllerNXTTest
             nxt.Connection.Open();
 
             // load sensors
-            nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
-            nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
+            nxt.Sensor2 = new NXTLightSensor();
+            nxt.Sensor3 = new NXTLightSensor();
             nxt.Sensor4 = new Sonar();
 
             // ----------- Main Loop ---------------
@@ -42,25 +43,32 @@ namespace _360ControllerNXTTest
             {
                 int light1 = nxt.Sensor2.ReadLightLevel();
                 int light2 = nxt.Sensor3.ReadLightLevel();
+                int sonar = nxt.Sensor4.ReadDistance();
 
-                Console.WriteLine("["+light1+"]---+---["+light2+"]");
+                Console.WriteLine("["+light1+"]---["+sonar+" cm]---["+light2+"]");
 
 
                 if (light2 - light1 < lightdiff)
                 {
-                    nxt.MotorA.On(-20);
+                    nxt.MotorA.On(30);
 
                 }
 
                 if(light2 - light1 > lightdiff)
                 {
-                    nxt.MotorA.On(20);
+                    nxt.MotorA.On(-30);
                 }
+
+                
 
                 if(Math.Abs(light2 - light1) <= lightdiff)
                 {
                     nxt.MotorA.Off();
                 }
+
+                int clawSpeed = calculateClawSpeed(sonar, sonarThreshold, clawDamp);
+                nxt.MotorC.On((sbyte)clawSpeed);
+                
 
                 if (f1.isRecording)
                 {
@@ -76,6 +84,19 @@ namespace _360ControllerNXTTest
             }
 
             // --------- End Main Loop -------------
+        }
+
+        public int calculateClawSpeed(int sonar, int threshold, int dampingFactor)
+        {
+            int speed = 0;
+
+            // calculate speed
+            if(sonar > sonarThreshold) {}
+            else
+            {
+                speed = sonar - sonarThreshold;
+            }
+            return speed;
         }
 }
 }
