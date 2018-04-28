@@ -11,26 +11,36 @@ using J2i.Net.XInputWrapper;
 using System.Threading;
 
 namespace _360ControllerNXTTest
-{
+{ 
+    struct SensorData
+    {
+        public int light1Pct;
+        public int light2Pct;
+        public int sonarCm;
+    }
+
     public partial class Form1 : Form
     {
         const string PORT = "usb";
-        bool isControllerEnabled;
+        bool isActive;
+        bool isRecording;
         Brick<Sensor, Sensor, Sensor, Sensor> nxt;
-        XboxController selectedController;
-        RobotCommunicator communicator;
-
+        NXTLightSensor ls1;
+        NXTLightSensor ls2;
+        Sonar sonar;
+        Queue<MoveCommand> commandQueue;
 
         public Form1()
         {
             InitializeComponent();
             nxt = new Brick<Sensor, Sensor, Sensor, Sensor>(PORT);
-            selectedController = XboxController.RetrieveController(1);
-            // spin up a RobotCommunicator instance
-            communicator = new RobotCommunicator(nxt, selectedController);
-            Thread commThread = new Thread(new ThreadStart(communicator.Start));
-            commThread.Start();
-            Console.WriteLine("Robot communication thread started.");
+            ls1 = new NXTLightSensor(LightMode.Off);
+            ls2 = new NXTLightSensor(LightMode.Off);
+            sonar = new Sonar(SonarMode.Centimeter);
+            nxt.Sensor1 = ls1;
+            nxt.Sensor2 = ls2;
+            nxt.Sensor3 = sonar;
+            commandQueue = new Queue<MoveCommand>();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,25 +58,9 @@ namespace _360ControllerNXTTest
         private void Form1_Load(object sender, EventArgs e)
         {
             
-
         }
 
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                selectedController = XboxController.RetrieveController(0);
-                double leftMotorSpeed = 10;
-                double rightMotorSpeed = 10;
-                selectedController.Vibrate(leftMotorSpeed, rightMotorSpeed, TimeSpan.FromSeconds(2.0));
-                
-            }
-            catch(Exception e1)
-            {
-                MessageBox.Show(e1.Message);
-            }
-        }
-
+        // Testing methods
         private void motorTestSequence(Brick<Sensor,Sensor,Sensor,Sensor> brick, int power, int delay)
         {
             brick.Connection.Open();
@@ -90,8 +84,7 @@ namespace _360ControllerNXTTest
 
         private void Button8_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -104,13 +97,12 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -123,13 +115,12 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -142,13 +133,12 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
         }
 
         private void boomDownButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -161,13 +151,12 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
         }
 
         private void rPincerCloseButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -180,13 +169,12 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
         }
 
         private void ttRightButton_Click(object sender, EventArgs e)
         {
-            if (!isControllerEnabled)
-            {
+
                 try
                 {
                     nxt.Connection.Open();
@@ -199,7 +187,19 @@ namespace _360ControllerNXTTest
                 {
                     MessageBox.Show(e1.Message);
                 }
-            }
+            
+        }
+
+        private void updateReadouts(SensorData newData)
+        {
+            Light1Value.Text = newData.light1Pct.ToString();
+            Light2Value.Text = newData.light2Pct.ToString();
+            UltrasonicValue.Text = newData.sonarCm.ToString();
+
+            // update readouts
+            Light1Value.Update();
+            Light2Value.Update();
+            UltrasonicValue.Update();
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -213,6 +213,16 @@ namespace _360ControllerNXTTest
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click_1(object sender, EventArgs e)
         {
 
         }
