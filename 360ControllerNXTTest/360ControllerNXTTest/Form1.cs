@@ -15,14 +15,19 @@ namespace _360ControllerNXTTest
 
     public partial class Form1 : Form
     {
-        const string PORT = "com7";
-        Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
+        // CONNECTIONS LIST
+        // Dorm PC -- com5
+        // Surface pro -- com7
+        const string DORM_PC = "com5";
+        const string SURF_PRO = "com7";
+        const string USB = "usb";
+        Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
         public bool isRecording;
 
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<Sensor, NXTLightSensor, NXTLightSensor, Sonar>(PORT);
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // change connection here
         }
         
         private void button1_Click(object sender, EventArgs e)
