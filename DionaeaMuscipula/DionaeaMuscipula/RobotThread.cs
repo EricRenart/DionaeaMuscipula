@@ -15,7 +15,7 @@ namespace _DionaeaMuscipula
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
         Form1 f1; // this is to update the readout
         const int lightdiff = 2; //difference between light sensor values in order for the arm to move in a direction
-        const int sonarThreshold = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
+        const int sonarThreshold = 24; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti, Form1 f1i)
         {
