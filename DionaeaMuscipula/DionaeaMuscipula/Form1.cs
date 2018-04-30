@@ -27,7 +27,7 @@ namespace _DionaeaMuscipula
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // change connection here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // change connection here
         }
         
         private void button1_Click(object sender, EventArgs e)

@@ -51,17 +51,17 @@ namespace _DionaeaMuscipula
 
                 Console.WriteLine("["+light1+"]---["+sonar+" cm]---["+light2+"]");
 
-                // if the right light sensor reading exceeds the left light sensor reading, move left
-                if (light2 - light1 < lightdiff)
+                // if the left light sensor reading exceeds the right light sensor reading, move right
+                if (light1 - light2 >= lightdiff)
                 {
-                    nxt.MotorA.On(30);
+                    nxt.MotorA.On(-30);
 
                 }
 
                 // if the right light sensor reading exceeds the left light sensor reading, move left
-                if(light2 - light1 > lightdiff)
+                if(light2 - light1 >= lightdiff)
                 {
-                    nxt.MotorA.On(-30);
+                    nxt.MotorA.On(30);
                 }
 
                 
