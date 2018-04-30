@@ -22,7 +22,7 @@ namespace _DionaeaMuscipula
         const string SURF_PRO = "com4";
         const string USB = "usb";
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
-        public bool isRecording;
+
 
         public Form1()
         {
@@ -57,11 +57,6 @@ namespace _DionaeaMuscipula
             Light1Value.Update();
             Light2Value.Update();
             UltrasonicValue.Update();
-        }
-
-        private void RecordButton_Click(object sender, EventArgs e)
-        {
-            isRecording = true;
         }
 
         private void PlaybackMovements_Click(object sender, EventArgs e)

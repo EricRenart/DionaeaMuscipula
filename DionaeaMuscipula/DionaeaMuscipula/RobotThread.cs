@@ -13,7 +13,6 @@ namespace _DionaeaMuscipula
         bool isActive;
         bool isRecording;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
-        Queue<MoveCommand> commandQueue;
         Form1 f1; // this is to update the readout
         const int lightdiff = 2; //difference between light sensor values in order for the arm to move in a direction
         const int sonarThreshold = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
@@ -24,7 +23,6 @@ namespace _DionaeaMuscipula
             f1 = f1i;
             isActive = true;
             isRecording = false;
-            commandQueue = new Queue<MoveCommand>();
         }
 
         public void start()
@@ -76,12 +74,6 @@ namespace _DionaeaMuscipula
                     nxt.MotorC.On(-50);
                     nxt.PlaySoundFile("cannotescape.rso",false);
                 }
-                
-
-                if (f1.isRecording)
-                {
-                    // Record stuff
-                }
 
                 // release the hand if the touch sensor is pressed
                 if(nxt.Sensor1.Read() > 0)
@@ -93,12 +85,6 @@ namespace _DionaeaMuscipula
                     nxt.MotorC.On(-50);
                     Thread.Sleep(1000);
                     nxt.MotorC.Off();
-                }
-
-                // keep the queue from overflowing
-                if(commandQueue.Count > 100000)
-                {
-                    commandQueue.Clear();
                 }
 
                 // kill key
