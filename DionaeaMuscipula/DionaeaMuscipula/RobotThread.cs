@@ -122,7 +122,7 @@ namespace _DionaeaMuscipula
             {
                 // generate a random amount of "ticks" that this command will execute for
                 int n = lowerBound + rng.Next(upperBound - lowerBound);
-
+                bool escape = false;
                 int j = 0;
                 while (j < n)
                 {
@@ -131,6 +131,8 @@ namespace _DionaeaMuscipula
                     if (nxt.Sensor1.Read() > 0)
                     {
                         Defeat();
+                        escape = true; // break out of 2 while loops at once
+                        break; 
                     }
 
                     sbyte speedA = (sbyte)rng.Next(-50, 50);
@@ -140,6 +142,11 @@ namespace _DionaeaMuscipula
                     nxt.MotorB.On(speedB);
 
                     Thread.Sleep(rng.Next(0, 2000));
+                }
+
+                if(escape)
+                {
+                    break;
                 }
 
                 nxt.MotorA.Off();
