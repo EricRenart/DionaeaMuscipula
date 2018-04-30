@@ -53,7 +53,6 @@ namespace _DionaeaMuscipula
                 if (light1 - light2 >= lightdiff)
                 {
                     nxt.MotorA.On(-30);
-
                 }
 
                 // if the right light sensor reading exceeds the left light sensor reading, move left
@@ -96,6 +95,12 @@ namespace _DionaeaMuscipula
             }
 
             // --------- End Main Loop -------------
+        }
+
+        public void ArmWrestle()
+        {
+            // moves in different directions once the arm is captured
+            nxt.PlaySoundFile("chicken.rso",false);
         }
 }
 }
