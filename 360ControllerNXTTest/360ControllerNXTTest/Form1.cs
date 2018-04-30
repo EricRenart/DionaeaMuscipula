@@ -19,7 +19,7 @@ namespace _360ControllerNXTTest
         // Dorm PC -- com5
         // Surface pro -- com7
         const string DORM_PC = "com5";
-        const string SURF_PRO = "com7";
+        const string SURF_PRO = "com4";
         const string USB = "usb";
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
         public bool isRecording;
@@ -27,7 +27,7 @@ namespace _360ControllerNXTTest
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // change connection here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // change connection here
         }
         
         private void button1_Click(object sender, EventArgs e)

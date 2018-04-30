@@ -38,6 +38,8 @@ namespace _360ControllerNXTTest
             nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor4 = new Sonar();
 
+            nxt.PlaySoundFile("letmeshakehand.rso", false);
+
             // ----------- Main Loop ---------------
             // Pressing the K key kills everything if things go awry
             while (isActive)
@@ -72,7 +74,7 @@ namespace _360ControllerNXTTest
                 if(sonar < sonarThreshold)
                 {
                     nxt.MotorC.On(-50);
-
+                    nxt.PlaySoundFile("cannotescape.rso",false);
                 }
                 
 
@@ -85,10 +87,11 @@ namespace _360ControllerNXTTest
                 if(nxt.Sensor1.Read() > 0)
                 {
                     nxt.MotorC.On(50);
-                    Thread.Sleep(3000);
+                    nxt.PlaySoundFile("button.rso", false);
+                    Thread.Sleep(1000);
                     nxt.MotorC.Off();
-                    nxt.MotorC.On(-20);
-                    Thread.Sleep(400);
+                    nxt.MotorC.On(-50);
+                    Thread.Sleep(1000);
                     nxt.MotorC.Off();
                 }
 
