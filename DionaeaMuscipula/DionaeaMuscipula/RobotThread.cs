@@ -14,6 +14,7 @@ namespace _DionaeaMuscipula
         bool isRecording;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
         Queue<MoveCommand> commandQueue;
+        Random rng;
         Form1 f1; // this is to update the readout
         const int lightdiff = 2; //difference between light sensor values in order for the arm to move in a direction
         const int sonarThreshold = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
@@ -37,6 +38,9 @@ namespace _DionaeaMuscipula
             nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor4 = new Sonar();
+
+            // load the RNG
+            rng = new Random();
 
             nxt.PlaySoundFile("letmeshakehand.rso", false);
 
@@ -75,6 +79,10 @@ namespace _DionaeaMuscipula
                 {
                     nxt.MotorC.On(-50);
                     nxt.PlaySoundFile("cannotescape.rso",false);
+                    Thread.Sleep(2000);
+
+                    int tortureDuration = rng.Next(15, 60);
+                    RandomMovement(tortureDuration, 10, 40);
                 }
                 
 
@@ -86,13 +94,7 @@ namespace _DionaeaMuscipula
                 // release the hand if the touch sensor is pressed
                 if(nxt.Sensor1.Read() > 0)
                 {
-                    nxt.MotorC.On(50);
-                    nxt.PlaySoundFile("button.rso", false);
-                    Thread.Sleep(1000);
-                    nxt.MotorC.Off();
-                    nxt.MotorC.On(-50);
-                    Thread.Sleep(1000);
-                    nxt.MotorC.Off();
+                    Defeat();
                 }
 
                 // keep the queue from overflowing
@@ -111,5 +113,52 @@ namespace _DionaeaMuscipula
 
             // --------- End Main Loop -------------
         }
-}
+
+        // This function moves the arm in random directions for random amounts of time after the arm is captured.
+        public void RandomMovement(int totalDuration, int lowerBound, int upperBound)
+        {
+            int i = 0;
+            while(i < totalDuration)
+            {
+                // generate a random amount of "ticks" that this command will execute for
+                int n = lowerBound + rng.Next(upperBound - lowerBound);
+
+                int j = 0;
+                while (j < n)
+                {
+
+                    // always provide the user with an option to stop at any time (the touch sensor)
+                    if (nxt.Sensor1.Read() > 0)
+                    {
+                        Defeat();
+                    }
+
+                    sbyte speedA = (sbyte)rng.Next(-50, 50);
+                    sbyte speedB = (sbyte)rng.Next(-50, 50);
+
+                    nxt.MotorA.On(speedA);
+                    nxt.MotorB.On(speedB);
+
+                    Thread.Sleep(rng.Next(0, 2000));
+                }
+
+                nxt.MotorA.Off();
+                nxt.MotorB.Off();
+                Thread.Sleep(500);
+
+                i += n;
+            }
+        }
+
+        public void Defeat()
+        {
+            nxt.MotorC.On(50);
+            nxt.PlaySoundFile("button.rso", false);
+            Thread.Sleep(1000);
+            nxt.MotorC.Off();
+            nxt.MotorC.On(-50);
+            Thread.Sleep(1000);
+            nxt.MotorC.Off();
+        }
+    }
 }
