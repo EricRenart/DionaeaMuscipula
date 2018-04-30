@@ -1,0 +1,30 @@
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.exe.config
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.exe
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.pdb
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\J2i.Net.XInputWrapper.dll
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\LibUsbDotNet.dll
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\MonoBrick.dll
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\MonoBrick.xml
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\_360ControllerNXTTest.Form1.resources
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\_360ControllerNXTTest.Properties.Resources.resources
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.GenerateResource.cache
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.CoreCompileInputs.cache
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.CopyComplete
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.exe
+C:\Users\Eric Renart\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.pdb
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.exe.config
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.exe
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\360ControllerNXTTest.pdb
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\J2i.Net.XInputWrapper.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\LibUsbDotNet.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\MonoBrick.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\bin\Release\MonoBrick.xml
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csprojResolveAssemblyReference.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\_360ControllerNXTTest.Form1.resources
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\_360ControllerNXTTest.Properties.Resources.resources
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\_360ControllerNXTTest.SensorStatus.resources
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.GenerateResource.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.CoreCompileInputs.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.csproj.CopyComplete
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.exe
+C:\Users\ericr\Desktop\CSE378FinalProject\360ControllerNXTTest\360ControllerNXTTest\obj\Release\360ControllerNXTTest.pdb
