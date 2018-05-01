@@ -22,12 +22,12 @@ namespace _DionaeaMuscipula
         const string SURF_PRO = "com4";
         const string USB = "usb";
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
-        public bool isRecording;
+
 
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // change connection here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace _DionaeaMuscipula
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RobotThread thread = new RobotThread(brick, this);
+            RobotThread thread = new RobotThread(brick);
             Thread newThread = new Thread(new ThreadStart(thread.start));
             newThread.Start();
         }
@@ -57,11 +57,6 @@ namespace _DionaeaMuscipula
             Light1Value.Update();
             Light2Value.Update();
             UltrasonicValue.Update();
-        }
-
-        private void RecordButton_Click(object sender, EventArgs e)
-        {
-            isRecording = true;
         }
 
         private void PlaybackMovements_Click(object sender, EventArgs e)
