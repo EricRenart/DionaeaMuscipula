@@ -19,7 +19,8 @@ namespace _DionaeaMuscipula
         const int SONAR_THRESHOLD = 24; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
-        const int ARM_WRESTLE_INTERVAL = 150;
+        const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
+        const int NUMBER_OF_ARM_MOVEMENTS = 15; // number of random movements the robot arm will make when it enters "wrestle mode"
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
@@ -78,7 +79,7 @@ namespace _DionaeaMuscipula
                     nxt.MotorC.On(-50);
                     nxt.PlaySoundFile("cannotescape.rso",false);
                     Thread.Sleep(4000);
-                    ArmWrestle(ARM_WRESTLE_INTERVAL);
+                    ArmWrestle(ARM_WRESTLE_INTERVAL,NUMBER_OF_ARM_MOVEMENTS);
                 }
 
                 // release the hand if the touch sensor is pressed
@@ -123,13 +124,50 @@ namespace _DionaeaMuscipula
             // --------- End Main Loop -------------
         }
 
-        public void ArmWrestle(int duration)
+        public void ArmWrestle(int duration, int numMovements)
         {
             // moves in different directions once the arm is captured
             nxt.PlaySoundFile("chicken.rso",false);
             Thread.Sleep(3000);
             nxt.PlaySoundFile("bonecrack.rso", true);
-            Thread.Sleep(duration);
+
+            // calculate time for each movement
+            int movementDuration = duration / numMovements;
+
+            // constants to determine which direction the arm will go for each DOF
+            int xDir, yDir;
+
+            // create the RNG
+            Random rng = new Random();
+
+            for(int i = 1; i < numMovements; i++)
+            {
+
+                // pick a random direction in the X axis (motor A)
+                if(rng.Next(-100,100) < 0)
+                {
+                    xDir = -1;
+                }
+                else
+                {
+                    xDir = 1;
+                }
+
+                // pick a random direction in the Y axis (motor B)
+                if (rng.Next(-100, 100) < 0)
+                {
+                    yDir = -1;
+                }
+                else
+                {
+                    yDir = 1;
+                }
+
+                // perform the movement
+                nxt.MotorA.On((sbyte)(xDir * 30));
+                nxt.MotorB.On((sbyte)(yDir * 30));
+                Thread.Sleep(movementDuration);
+            }
         }
 }
 }
