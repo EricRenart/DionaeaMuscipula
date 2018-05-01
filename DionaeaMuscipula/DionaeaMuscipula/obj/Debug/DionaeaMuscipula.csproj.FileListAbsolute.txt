@@ -1,0 +1,15 @@
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.exe.config
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.exe
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.pdb
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\J2i.Net.XInputWrapper.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\LibUsbDotNet.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\MonoBrick.dll
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\MonoBrick.xml
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csprojResolveAssemblyReference.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\_DionaeaMuscipula.Form1.resources
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\_DionaeaMuscipula.Properties.Resources.resources
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.GenerateResource.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.CoreCompileInputs.cache
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.CopyComplete
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.exe
+C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.pdb
