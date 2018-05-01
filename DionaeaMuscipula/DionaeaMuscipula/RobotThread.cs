@@ -21,7 +21,7 @@ namespace _DionaeaMuscipula
         const int BEG_INTERVAL = 30000; // beg for human contact every 30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 30000;
 
-        public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti, Form1 f1i)
+        public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
             nxt = nxti;
             isActive = true;

@@ -27,7 +27,7 @@ namespace _DionaeaMuscipula
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // change connection here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace _DionaeaMuscipula
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RobotThread thread = new RobotThread(brick, this);
+            RobotThread thread = new RobotThread(brick);
             Thread newThread = new Thread(new ThreadStart(thread.start));
             newThread.Start();
         }
