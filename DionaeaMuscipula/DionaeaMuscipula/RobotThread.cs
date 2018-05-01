@@ -109,6 +109,7 @@ namespace _DionaeaMuscipula
                     {
                         clawLock = false;
                         lockElapsed = 0;
+                        begTimerElapsed = 0;
                     }
                 }
 
@@ -129,7 +130,6 @@ namespace _DionaeaMuscipula
             // moves in different directions once the arm is captured
             nxt.PlaySoundFile("chicken.rso",false);
             nxt.PlaySoundFile("bonecrack.rso", true);
-
         }
 }
 }
