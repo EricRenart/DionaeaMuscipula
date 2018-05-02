@@ -87,8 +87,6 @@ namespace _DionaeaMuscipula
                 if(sonar < SONAR_THRESHOLD && !clawLock)
                 {
                     nxt.MotorC.On(-50);
-                    nxt.PlaySoundFile("cannotescape.rso",false);
-                    Thread.Sleep(4000);
                     ArmWrestle(ARM_WRESTLE_INTERVAL,NUMBER_OF_ARM_MOVEMENTS);
                 }
 
@@ -140,6 +138,8 @@ namespace _DionaeaMuscipula
             // moves in different directions once the arm is captured
             if (!tauntPlayed)
             {
+                nxt.PlaySoundFile("cannotescape.rso", false);
+                Thread.Sleep(3000);
                 nxt.PlaySoundFile("chicken.rso", false);
                 Thread.Sleep(3000);
                 tauntPlayed = true;
