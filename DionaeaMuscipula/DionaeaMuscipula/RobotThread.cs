@@ -21,6 +21,7 @@ namespace _DionaeaMuscipula
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 15; // number of random movements the robot arm will make when it enters "wrestle mode"
+        const int MOVEMENT_RANGE = 60;
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
@@ -131,6 +132,7 @@ namespace _DionaeaMuscipula
             Thread.Sleep(3000);
             nxt.PlaySoundFile("bonecrack.rso", true);
 
+
             // calculate time for each movement
             int movementDuration = duration / numMovements;
 
@@ -142,9 +144,11 @@ namespace _DionaeaMuscipula
 
             for(int i = 1; i < numMovements; i++)
             {
+                nxt.MotorA.ResetTacho();
+                nxt.MotorB.ResetTacho();
 
                 // pick a random direction in the X axis (motor A)
-                if(rng.Next(-100,100) < 0)
+                if (rng.Next(-100,100) < 0)
                 {
                     xDir = -1;
                 }
@@ -164,8 +168,8 @@ namespace _DionaeaMuscipula
                 }
 
                 // perform the movement
-                nxt.MotorA.On((sbyte)(xDir * 30));
-                nxt.MotorB.On((sbyte)(yDir * 30));
+                nxt.MotorA.On((sbyte)(xDir * 100),MOVEMENT_RANGE);
+                nxt.MotorB.On((sbyte)(yDir * 100),MOVEMENT_RANGE);
                 Thread.Sleep(movementDuration);
             }
         }

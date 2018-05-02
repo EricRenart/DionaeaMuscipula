@@ -13,3 +13,18 @@ C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\
 C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.CopyComplete
 C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.exe
 C:\Users\ericr\Desktop\CSE378FinalProject\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.pdb
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.exe.config
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.exe
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\DionaeaMuscipula.pdb
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\J2i.Net.XInputWrapper.dll
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\LibUsbDotNet.dll
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\MonoBrick.dll
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\bin\Debug\MonoBrick.xml
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csprojResolveAssemblyReference.cache
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\_DionaeaMuscipula.Form1.resources
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\_DionaeaMuscipula.Properties.Resources.resources
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.GenerateResource.cache
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.CoreCompileInputs.cache
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.csproj.CopyComplete
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.exe
+C:\Users\Eric Renart\Desktop\DionaeaMuscipula\DionaeaMuscipula\DionaeaMuscipula\obj\Debug\DionaeaMuscipula.pdb
