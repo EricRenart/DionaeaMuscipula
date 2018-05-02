@@ -16,13 +16,20 @@ namespace _DionaeaMuscipula
         int lockElapsed = 0;
         int begTimerElapsed = 0;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
+
+        /*
+         * VENUS FLYTRAP BOT
+         * MOVEMENT SETTINGS
+         * 
+         * Change the following constant ints to modify the behavior of the robot.
+         */
         const int LIGHT_DIFF = 2; //difference between light sensor values in order for the arm to move in a direction
         const int SONAR_THRESHOLD = 24; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 15; // number of random movements the robot arm will make when it enters "wrestle mode"
-        const int MOVEMENT_RANGE = 60;
+        const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling phase
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
