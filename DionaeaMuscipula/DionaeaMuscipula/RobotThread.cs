@@ -17,7 +17,7 @@ namespace _DionaeaMuscipula
         bool keyboardControl; // is keyboard control enabled?
         int lockElapsed = 0;
         int begTimerElapsed = 0;
-        Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
+        Brick<TouchSensor, Sensor,Sensor,Sensor> nxt;
         int lastX, lastY = 0;
 
         /*
@@ -46,7 +46,7 @@ namespace _DionaeaMuscipula
         
         // END MOVEMENT SETTINGS
 
-        public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
+        public RobotThread(Brick<TouchSensor, Sensor,Sensor,Sensor> nxti)
         {
             nxt = nxti;
             isActive = true;
@@ -61,28 +61,13 @@ namespace _DionaeaMuscipula
 
             // load sensors
             nxt.Sensor1 = new TouchSensor();
-            nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
-            nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
-            nxt.Sensor4 = new Sonar();
-            int light1, light2 = 0;
-            int sonar = 0;
 
-            nxt.PlaySoundFile("letmeshakehand.rso", false);
+            //nxt.PlaySoundFile("letmeshakehand.rso", false);
 
             // ----------- Main Loop ---------------
 
             while (isActive)
             {
-                // read sensor data
-                if (LIGHT_SENS_ENABLED)
-                {
-                    light1 = nxt.Sensor2.ReadLightLevel();
-                    light2 = nxt.Sensor3.ReadLightLevel();
-                }
-                if (SONAR_ENABLED)
-                {
-                    sonar = nxt.Sensor4.ReadDistance();
-                }
 
                 // get the current key pressed and move the arm appropriately
                 while(Form1.keyPressed.Equals(Keys.W))
@@ -109,173 +94,27 @@ namespace _DionaeaMuscipula
                 {
                     nxt.MotorC.On(-1 * SLEW_SPEED_CLAW);
                 }
-                if(Form1.keyPressed.Equals(Keys.None))
+                if (Form1.keyPressed.Equals(Keys.None))
                 {
                     nxt.MotorA.Off();
                     nxt.MotorB.Off();
                     nxt.MotorC.Off();
                 }
 
-                if (LIGHT_SENS_ENABLED)
+                // If the touch sensor is pressed...
+                if(nxt.Sensor1.Read() == 1)
                 {
-                    // for debugging purposes
-                    Console.WriteLine("[" + light1 + "]------[" + light2 + "]");
-
-                    // if the left light sensor reading exceeds the right light sensor reading, move right
-                    if (light1 - light2 >= LIGHT_DIFF)
-                    {
-                        nxt.MotorA.On(-30);
-                    }
-
-                    // if the right light sensor reading exceeds the left light sensor reading, move left
-                    if (light2 - light1 >= LIGHT_DIFF)
-                    {
-                        nxt.MotorA.On(30);
-                    }
-
-
-                    // if the difference between sensor values is less than the threshold stop the motor
-                    if (Math.Abs(light2 - light1) <= LIGHT_DIFF)
-                    {
-                        nxt.MotorA.Off();
-                    }
-                }
-
-                // Capture the hand if it is within the capture interval and the claw is not locked.
-                if (SONAR_ENABLED && !SONAR_TESTING_MODE)
-                {
-
-                    if (sonar < SONAR_THRESHOLD && !clawLock)
-                    {
-                        nxt.MotorC.On(-50);
-                        ArmWrestle(ARM_WRESTLE_INTERVAL, NUMBER_OF_ARM_MOVEMENTS);
-                        nxt.MotorC.On(50);
-                        break;
-                    }
-                }
-                
-                if(SONAR_TESTING_MODE)
-                {
-                    // test the sonar sensor without triggering arm wrestling
-                    Console.WriteLine(sonar + "cm");
-                    if(sonar < SONAR_THRESHOLD)
-                    {
-                        Console.WriteLine("*** TRIGGERED ***");
-                        nxt.MotorC.On(-100);
-                        Thread.Sleep(2000);
-                        nxt.MotorC.On(100);
-                        Thread.Sleep(500);
-                        nxt.MotorC.Off();
-                    }
-                }
-
-                // 5 second grace period after the touch sensor is pressed (assuming this loop takes ~1ms to step)
-                if(clawLock)
-                {
-                    lockElapsed++;
-                    if(lockElapsed >= CLAW_LOCK_INTERVAL)
-                    {
-                        clawLock = false;
-                        tauntPlayed = false;
-                        lockElapsed = 0;
-                        begTimerElapsed = 0;
-                    }
-                }
-
-                // beg for human contact every 30s or so
-                begTimerElapsed++;
-                if(begTimerElapsed >= BEG_INTERVAL && BEGGING)
-                {
-                    nxt.PlaySoundFile("isanybodyaround.rso", false);
-                    begTimerElapsed = 0;
+                    nxt.MotorC.On(-100);
+                    Thread.Sleep(2000);
+                    nxt.MotorC.On(100);
+                    Thread.Sleep(500);
                 }
             }
 
             // --------- End Main Loop -------------
         }
 
-        public void ArmWrestle(int duration, int numMovements)
-        {
-            // moves in different directions once the arm is captured
-            if (!tauntPlayed)
-            {
-                nxt.PlaySoundFile("cannotescape.rso", false);
-                Thread.Sleep(3000);
-                nxt.PlaySoundFile("chicken.rso", false);
-                Thread.Sleep(3000);
-                tauntPlayed = true;
-            }
-            nxt.PlaySoundFile("bonecrack.rso", true);
-
-
-            // calculate time for each movement
-            int movementDuration = duration / numMovements;
-
-            // initial arm movement
-            MoveRandom(movementDuration);
-
-            for(int i = 2; i < numMovements; i++)
-            {
-                MoveOpposite(movementDuration);
-                // release the hand if the touch sensor is pressed
-                if (nxt.Sensor1.Read() > 0)
-                {
-                    nxt.MotorC.On(50);
-                    nxt.PlaySoundFile("button.rso", false);
-                    Thread.Sleep(1000);
-                    nxt.MotorC.Off();
-                    clawLock = true;
-                    break;
-                }
-                Thread.Sleep(duration);
-            }
-        }
-
-        private void MoveRandom(int duration)
-        {
-            nxt.MotorA.ResetTacho();
-            nxt.MotorB.ResetTacho();
-
-            // create the RNG
-            Random rng = new Random();
-
-            // pick a random direction in the X axis (motor A)
-            if (rng.Next(-100, 100) < 0)
-            {
-                lastX = -1;
-            }
-            else
-            {
-                lastX = 1;
-            }
-
-            // pick a random direction in the Y axis (motor B)
-            if (rng.Next(-100, 100) < 0)
-            {
-                lastY = -1;
-            }
-            else
-            {
-                lastY = 1;
-            }
-
-            nxt.MotorA.On((sbyte)(lastX * 100), MOVEMENT_RANGE);
-            nxt.MotorB.On((sbyte)(lastY * 100), MOVEMENT_RANGE);
-            
-        }
-
-        private void MoveOpposite(int movementDuration)
-        {
-            nxt.MotorA.ResetTacho();
-            nxt.MotorB.ResetTacho();
-
-
-            // perform the movement
-            lastX = lastX * -1;
-            lastY = lastY * -1;
-            nxt.MotorA.On((sbyte)(lastX * 100), MOVEMENT_RANGE);
-            nxt.MotorB.On((sbyte)(lastY * 100), MOVEMENT_RANGE);
-            Thread.Sleep(movementDuration);
-        }
+        
+       
 }
 }

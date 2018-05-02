@@ -18,17 +18,17 @@ namespace _DionaeaMuscipula
         // CONNECTIONS LIST
         // Dorm PC -- com5
         // Surface pro -- com7
-        const string DORM_PC = "com5";
+        const string DORM_PC = "com6";
         const string SURF_PRO = "com3";
         const string USB = "usb";
         public static Keys keyPressed;
-        Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
+        Brick<TouchSensor, Sensor,Sensor,Sensor> brick;
 
 
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
+            brick = new Brick<TouchSensor, Sensor,Sensor,Sensor>(DORM_PC); // set connection option here
             this.KeyPreview = true;
         }
         
@@ -49,16 +49,6 @@ namespace _DionaeaMuscipula
             RobotThread thread = new RobotThread(brick);
             Thread newThread = new Thread(new ThreadStart(thread.start));
             newThread.Start();
-        }
-
-        private void UpdateReadouts(object sender, EventArgs e)
-        {
-            Light1Value.Text = brick.Sensor2.ReadAsString();
-            Light2Value.Text = brick.Sensor3.ReadAsString();
-            UltrasonicValue.Text = brick.Sensor4.ReadAsString();  // update readouts
-            Light1Value.Update();
-            Light2Value.Update();
-            UltrasonicValue.Update();
         }
 
         private void PlaybackMovements_Click(object sender, EventArgs e)
