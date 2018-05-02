@@ -30,7 +30,8 @@ namespace _DionaeaMuscipula
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 100; // number of random movements the robot arm will make when it enters "wrestle mode"
-        const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling phase
+        const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
+        const bool BEGGING = true; // Change this to false to disable the periodic "Please, is anybody around" phrase
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
@@ -118,7 +119,7 @@ namespace _DionaeaMuscipula
 
                 // beg for human contact every 30s or so
                 begTimerElapsed++;
-                if(begTimerElapsed >= BEG_INTERVAL)
+                if(begTimerElapsed >= BEG_INTERVAL && BEGGING)
                 {
                     nxt.PlaySoundFile("isanybodyaround.rso", false);
                     begTimerElapsed = 0;
