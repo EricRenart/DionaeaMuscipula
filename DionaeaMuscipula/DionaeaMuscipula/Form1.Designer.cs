@@ -42,7 +42,7 @@
             // nxtTestButton
             // 
             this.nxtTestButton.Location = new System.Drawing.Point(6, 11);
-            this.nxtTestButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nxtTestButton.Margin = new System.Windows.Forms.Padding(2);
             this.nxtTestButton.Name = "nxtTestButton";
             this.nxtTestButton.Size = new System.Drawing.Size(302, 59);
             this.nxtTestButton.TabIndex = 0;
@@ -129,10 +129,12 @@
             this.ClientSize = new System.Drawing.Size(319, 239);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.nxtTestButton);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "MonoBrick Tester";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.invalidateKeys);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);

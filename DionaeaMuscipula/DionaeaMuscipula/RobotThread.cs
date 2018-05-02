@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace _DionaeaMuscipula
 {
@@ -13,6 +14,7 @@ namespace _DionaeaMuscipula
         bool isActive;
         bool clawLock;
         bool tauntPlayed;
+        bool keyboardControl; // is keyboard control enabled?
         int lockElapsed = 0;
         int begTimerElapsed = 0;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
@@ -24,6 +26,13 @@ namespace _DionaeaMuscipula
          * 
          * Change the following constant ints to modify the behavior of the robot.
          */
+
+        // Booleans
+        const bool LIGHT_SENS_ENABLED = false;
+        const bool SONAR_ENABLED = false;
+        const bool BEGGING = false; // Change this to false to disable the periodic "Please, is anybody around" phrase
+
+        // Ints
         const int LIGHT_DIFF = 2; //difference between light sensor values in order for the arm to move in a direction
         const int SONAR_THRESHOLD = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
@@ -31,7 +40,10 @@ namespace _DionaeaMuscipula
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 100; // number of random movements the robot arm will make when it enters "wrestle mode"
         const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
-        const bool BEGGING = true; // Change this to false to disable the periodic "Please, is anybody around" phrase
+        const int SLEW_SPEED = 30; // speed of the arm when it is slewn by the keyboard
+        const int SLEW_SPEED_CLAW = 10;
+        
+        // END MOVEMENT SETTINGS
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
@@ -51,6 +63,8 @@ namespace _DionaeaMuscipula
             nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor4 = new Sonar();
+            int light1, light2 = 0;
+            int sonar = 0;
 
             nxt.PlaySoundFile("letmeshakehand.rso", false);
 
@@ -59,42 +73,86 @@ namespace _DionaeaMuscipula
             while (isActive)
             {
                 // read sensor data
-                int light1 = nxt.Sensor2.ReadLightLevel();
-                int light2 = nxt.Sensor3.ReadLightLevel();
-                int sonar = nxt.Sensor4.ReadDistance();
-
-                // for debugging purposes
-                Console.WriteLine("["+light1+"]---["+sonar+" cm]---["+light2+"]");
-
-                // if the left light sensor reading exceeds the right light sensor reading, move right
-                if (light1 - light2 >= LIGHT_DIFF)
+                if (LIGHT_SENS_ENABLED)
                 {
-                    nxt.MotorA.On(-30);
+                    light1 = nxt.Sensor2.ReadLightLevel();
+                    light2 = nxt.Sensor3.ReadLightLevel();
+                }
+                if (SONAR_ENABLED)
+                {
+                    sonar = nxt.Sensor4.ReadDistance();
                 }
 
-                // if the right light sensor reading exceeds the left light sensor reading, move left
-                if(light2 - light1 >= LIGHT_DIFF)
+                // get the current key pressed and move the arm appropriately
+                while(Form1.keyPressed.Equals(Keys.W))
                 {
-                    nxt.MotorA.On(30);
+                    nxt.MotorB.On(SLEW_SPEED);
                 }
-
-                
-                // if the difference between sensor values is less than the threshold stop the motor
-                if(Math.Abs(light2 - light1) <= LIGHT_DIFF)
+                while(Form1.keyPressed.Equals(Keys.A))
+                {
+                    nxt.MotorA.On(SLEW_SPEED);
+                }
+                while(Form1.keyPressed.Equals(Keys.S))
+                {
+                    nxt.MotorB.On(-1 * SLEW_SPEED);
+                }
+                while(Form1.keyPressed.Equals(Keys.D))
+                {
+                    nxt.MotorA.On(-1*SLEW_SPEED);
+                }
+                while(Form1.keyPressed.Equals(Keys.Q))
+                {
+                    nxt.MotorC.On(SLEW_SPEED_CLAW);
+                }
+                while(Form1.keyPressed.Equals(Keys.E))
+                {
+                    nxt.MotorC.On(-1 * SLEW_SPEED_CLAW);
+                }
+                if(Form1.keyPressed.Equals(Keys.None))
                 {
                     nxt.MotorA.Off();
+                    nxt.MotorB.Off();
+                    nxt.MotorC.Off();
+                }
+
+                if (LIGHT_SENS_ENABLED)
+                {
+                    // for debugging purposes
+                    Console.WriteLine("[" + light1 + "]---[" + sonar + " cm]---[" + light2 + "]");
+
+                    // if the left light sensor reading exceeds the right light sensor reading, move right
+                    if (light1 - light2 >= LIGHT_DIFF)
+                    {
+                        nxt.MotorA.On(-30);
+                    }
+
+                    // if the right light sensor reading exceeds the left light sensor reading, move left
+                    if (light2 - light1 >= LIGHT_DIFF)
+                    {
+                        nxt.MotorA.On(30);
+                    }
+
+
+                    // if the difference between sensor values is less than the threshold stop the motor
+                    if (Math.Abs(light2 - light1) <= LIGHT_DIFF)
+                    {
+                        nxt.MotorA.Off();
+                    }
                 }
 
                 // Capture the hand if it is within the capture interval and the claw is not locked.
-                if(sonar < SONAR_THRESHOLD && !clawLock)
+                if (SONAR_ENABLED)
                 {
-                    nxt.MotorC.On(-50);
-                    ArmWrestle(ARM_WRESTLE_INTERVAL,NUMBER_OF_ARM_MOVEMENTS);
-                    nxt.MotorC.On(50);
-                    break;
+                    if (sonar < SONAR_THRESHOLD && !clawLock)
+                    {
+                        nxt.MotorC.On(-50);
+                        ArmWrestle(ARM_WRESTLE_INTERVAL, NUMBER_OF_ARM_MOVEMENTS);
+                        nxt.MotorC.On(50);
+                        break;
+                    }
                 }
 
-
+                
 
                 // kill key
                 if(Console.Read() == 'k')

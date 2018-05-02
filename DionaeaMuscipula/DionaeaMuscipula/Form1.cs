@@ -21,13 +21,15 @@ namespace _DionaeaMuscipula
         const string DORM_PC = "com5";
         const string SURF_PRO = "com3";
         const string USB = "usb";
+        public static Keys keyPressed;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
 
 
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // set connection option here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
+            this.KeyPreview = true;
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -62,6 +64,19 @@ namespace _DionaeaMuscipula
         private void PlaybackMovements_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // handle key presses
+        private void onKeyPress(Object sender, KeyEventArgs e)
+        {
+            Console.WriteLine(e.ToString());
+            keyPressed = e.KeyCode;
+        }
+
+        // reset key press info
+        private void invalidateKeys(Object sender, KeyEventArgs e)
+        {
+            keyPressed = Keys.None;
         }
     }
 }
