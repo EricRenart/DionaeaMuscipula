@@ -19,7 +19,7 @@ namespace _DionaeaMuscipula
         // Dorm PC -- com5
         // Surface pro -- com7
         const string DORM_PC = "com5";
-        const string SURF_PRO = "com4";
+        const string SURF_PRO = "com3";
         const string USB = "usb";
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
 
@@ -27,7 +27,7 @@ namespace _DionaeaMuscipula
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // set connection option here
         }
         
         private void button1_Click(object sender, EventArgs e)
