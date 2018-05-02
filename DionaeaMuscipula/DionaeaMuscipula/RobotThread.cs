@@ -29,12 +29,13 @@ namespace _DionaeaMuscipula
 
         // Booleans
         const bool LIGHT_SENS_ENABLED = false;
-        const bool SONAR_ENABLED = false;
+        const bool SONAR_ENABLED = true;
+        const bool SONAR_TESTING_MODE = true;
         const bool BEGGING = false; // Change this to false to disable the periodic "Please, is anybody around" phrase
 
         // Ints
         const int LIGHT_DIFF = 2; //difference between light sensor values in order for the arm to move in a direction
-        const int SONAR_THRESHOLD = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
+        const int SONAR_THRESHOLD = 25; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
@@ -69,7 +70,7 @@ namespace _DionaeaMuscipula
             nxt.PlaySoundFile("letmeshakehand.rso", false);
 
             // ----------- Main Loop ---------------
-            // Pressing the K key kills everything if things go awry
+
             while (isActive)
             {
                 // read sensor data
@@ -118,7 +119,7 @@ namespace _DionaeaMuscipula
                 if (LIGHT_SENS_ENABLED)
                 {
                     // for debugging purposes
-                    Console.WriteLine("[" + light1 + "]---[" + sonar + " cm]---[" + light2 + "]");
+                    Console.WriteLine("[" + light1 + "]------[" + light2 + "]");
 
                     // if the left light sensor reading exceeds the right light sensor reading, move right
                     if (light1 - light2 >= LIGHT_DIFF)
@@ -141,8 +142,9 @@ namespace _DionaeaMuscipula
                 }
 
                 // Capture the hand if it is within the capture interval and the claw is not locked.
-                if (SONAR_ENABLED)
+                if (SONAR_ENABLED && !SONAR_TESTING_MODE)
                 {
+
                     if (sonar < SONAR_THRESHOLD && !clawLock)
                     {
                         nxt.MotorC.On(-50);
@@ -151,15 +153,20 @@ namespace _DionaeaMuscipula
                         break;
                     }
                 }
-
                 
-
-                // kill key
-                if(Console.Read() == 'k')
+                if(SONAR_TESTING_MODE)
                 {
-                    Console.WriteLine("Kill command issued.");
-                    isActive = false;
-                    break;
+                    // test the sonar sensor without triggering arm wrestling
+                    Console.WriteLine(sonar + "cm");
+                    if(sonar < SONAR_THRESHOLD)
+                    {
+                        Console.WriteLine("*** TRIGGERED ***");
+                        nxt.MotorC.On(-100);
+                        Thread.Sleep(2000);
+                        nxt.MotorC.On(100);
+                        Thread.Sleep(500);
+                        nxt.MotorC.Off();
+                    }
                 }
 
                 // 5 second grace period after the touch sensor is pressed (assuming this loop takes ~1ms to step)
