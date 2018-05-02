@@ -12,6 +12,7 @@ namespace _DionaeaMuscipula
     {
         bool isActive;
         bool clawLock;
+        bool tauntPlayed;
         int lockElapsed = 0;
         int begTimerElapsed = 0;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxt;
@@ -28,6 +29,7 @@ namespace _DionaeaMuscipula
             nxt = nxti;
             isActive = true;
             clawLock = false;
+            tauntPlayed = false;
         }
 
         public void start()
@@ -108,6 +110,7 @@ namespace _DionaeaMuscipula
                     if(lockElapsed >= CLAW_LOCK_INTERVAL)
                     {
                         clawLock = false;
+                        tauntPlayed = false;
                         lockElapsed = 0;
                         begTimerElapsed = 0;
                     }
@@ -128,8 +131,12 @@ namespace _DionaeaMuscipula
         public void ArmWrestle(int duration, int numMovements)
         {
             // moves in different directions once the arm is captured
-            nxt.PlaySoundFile("chicken.rso",false);
-            Thread.Sleep(3000);
+            if (!tauntPlayed)
+            {
+                nxt.PlaySoundFile("chicken.rso", false);
+                Thread.Sleep(3000);
+                tauntPlayed = true;
+            }
             nxt.PlaySoundFile("bonecrack.rso", true);
 
 
