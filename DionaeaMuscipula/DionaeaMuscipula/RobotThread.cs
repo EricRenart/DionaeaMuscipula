@@ -25,7 +25,7 @@ namespace _DionaeaMuscipula
          * Change the following constant ints to modify the behavior of the robot.
          */
         const int LIGHT_DIFF = 2; //difference between light sensor values in order for the arm to move in a direction
-        const int SONAR_THRESHOLD = 8; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
+        const int SONAR_THRESHOLD = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
@@ -63,7 +63,7 @@ namespace _DionaeaMuscipula
                 int sonar = nxt.Sensor4.ReadDistance();
 
                 // for debugging purposes
-                //Console.WriteLine("["+light1+"]---["+sonar+" cm]---["+light2+"]");
+                Console.WriteLine("["+light1+"]---["+sonar+" cm]---["+light2+"]");
 
                 // if the left light sensor reading exceeds the right light sensor reading, move right
                 if (light1 - light2 >= LIGHT_DIFF)
@@ -93,15 +93,7 @@ namespace _DionaeaMuscipula
                     break;
                 }
 
-                // release the hand if the touch sensor is pressed
-                if(nxt.Sensor1.Read() > 0)
-                {
-                    nxt.MotorC.On(50);
-                    nxt.PlaySoundFile("button.rso", false);
-                    Thread.Sleep(1000);
-                    nxt.MotorC.Off();
-                    clawLock = true;
-                }
+
 
                 // kill key
                 if(Console.Read() == 'k')
@@ -159,12 +151,25 @@ namespace _DionaeaMuscipula
             for(int i = 2; i < numMovements; i++)
             {
                 MoveOpposite(movementDuration);
+                // release the hand if the touch sensor is pressed
+                if (nxt.Sensor1.Read() > 0)
+                {
+                    nxt.MotorC.On(50);
+                    nxt.PlaySoundFile("button.rso", false);
+                    Thread.Sleep(1000);
+                    nxt.MotorC.Off();
+                    clawLock = true;
+                    break;
+                }
                 Thread.Sleep(duration);
             }
         }
 
         private void MoveRandom(int duration)
         {
+            nxt.MotorA.ResetTacho();
+            nxt.MotorB.ResetTacho();
+
             // create the RNG
             Random rng = new Random();
 
