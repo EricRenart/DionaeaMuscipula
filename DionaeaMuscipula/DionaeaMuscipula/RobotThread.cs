@@ -368,12 +368,21 @@ namespace _DionaeaMuscipula
             // move to the start
             MovementInfo toStart = MovementToStart();
             MoveFromInfo(toStart);
+            while(nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
+            {
+                Thread.Sleep(100);
+            }
+            int queueLength = commandQueue.Count();
 
-            for (int i = 0; i < commandQueue.Count(); i++)
+            for (int i = 0; i < queueLength; i++)
             {
                 MovementInfo current = commandQueue.Dequeue();
                 MoveFromInfo(current);
-                Console.WriteLine("Queue Length: " + commandQueue.Count());
+                Console.WriteLine("Queue Length: " + commandQueue.Count() + " Executing [dA ="+current.dA+" dB="+current.dB+" dC="+current.dC+"]");
+                while (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
+                {
+                    Thread.Sleep(100);
+                }
             }
             commandQueue.Clear();
         }
@@ -435,10 +444,7 @@ namespace _DionaeaMuscipula
                 nxt.MotorC.On(SLEW_SPEED, (uint)info.dC);
             }
 
-            while (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
-            {
-                Thread.Sleep(1);
-            }
+
         }
 }
 }
