@@ -150,19 +150,20 @@ namespace _DionaeaMuscipula
                     // close the claw manually
                     if (!clawClosed)
                     {
-                        nxt.MotorC.On(-1 * SLEW_SPEED_CLAW, 100);
+                        nxt.MotorC.On(-15);
+                        Thread.Sleep(1000);
                         clawClosed = true;
+                        nxt.MotorC.Off();
                     }
                     else
                     {
                         // manual release of claw
-                        nxt.MotorC.On(SLEW_SPEED_CLAW, 100);
+                        nxt.MotorC.On(15);
+                        Thread.Sleep(1000);
                         clawClosed = false;
+                        nxt.MotorC.Off();
                     }
-                    while (nxt.MotorC.IsRunning())
-                    {
-                        Thread.Sleep(100);
-                    }
+ 
                     Form1.keyPressed = ' ';
                 }
                 if (Form1.keyPressed == 'r')
