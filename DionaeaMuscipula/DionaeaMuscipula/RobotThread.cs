@@ -72,7 +72,8 @@ namespace _DionaeaMuscipula
         const int MOVEMENT_RANGE = 500; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
         const int SLEW_SPEED = 15; // speed of the arm when it is slewn by the keyboard
         const int WRESTLE_GRIP_STRENGTH = 100;
-        const int GRAB_STRENGTH = 50;
+        const int PLAYBACK_TIMEOUT = 50;
+        const int GRAB_STRENGTH = 40;
         const int SLEW_SPEED_CLAW = 10;
 
         // END MOVEMENT SETTINGS
@@ -146,7 +147,7 @@ namespace _DionaeaMuscipula
                     if (!HOLDING_OBJECT)
                     {
                         HOLDING_OBJECT = true;
-                        nxt.MotorC.On(-15);
+                        nxt.MotorC.On(-1*GRAB_STRENGTH);
                         Thread.Sleep(1000);
                         nxt.MotorC.Off();
                     }
@@ -154,8 +155,8 @@ namespace _DionaeaMuscipula
                     {
                         // manual release of claw
                         HOLDING_OBJECT = false;
-                        nxt.MotorC.On(15);
-                        Thread.Sleep(1000);
+                        nxt.MotorC.On(GRAB_STRENGTH);
+                        Thread.Sleep(2000);
                         nxt.MotorC.Off();
                     }
  
@@ -223,8 +224,12 @@ namespace _DionaeaMuscipula
                         nxt.MotorC.On(-1 * GRAB_STRENGTH);
                         HOLDING_OBJECT = true;
                         Thread.Sleep(500);
-                        nxt.MotorC.Brake();
+                        //nxt.MotorC.Brake();
                     }
+                }
+                if(HOLDING_OBJECT)
+                {
+                    nxt.MotorC.On(-1 * GRAB_STRENGTH);
                 }
 
                 if (SONAR_TESTING_MODE)
@@ -380,9 +385,17 @@ namespace _DionaeaMuscipula
                 MovementInfo current = commandQueue.Dequeue();
                 MoveFromInfo(current);
                 Console.WriteLine("Queue Length: " + commandQueue.Count() + " Executing [dA ="+current.dA+" dB="+current.dB+" dC="+current.dC+"]");
+                int timeout = 0;
                 while (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(1);
+                    timeout++;
+                    Console.WriteLine("Timeout: " + timeout + "/"+PLAYBACK_TIMEOUT);
+                    if(timeout >= PLAYBACK_TIMEOUT)
+                    {
+                        break;
+                    }
+                    
                 }
             }
             commandQueue.Clear();
