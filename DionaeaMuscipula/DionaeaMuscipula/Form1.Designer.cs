@@ -133,7 +133,7 @@
             this.Name = "Form1";
             this.Text = "MonoBrick Tester";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyPress);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.onKeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.invalidateKeys);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

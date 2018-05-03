@@ -18,10 +18,10 @@ namespace _DionaeaMuscipula
         // CONNECTIONS LIST
         // Dorm PC -- com5
         // Surface pro -- com7
-        const string DORM_PC = "com5";
+        const string DORM_PC = "com6";
         const string SURF_PRO = "com3";
         const string USB = "usb";
-        public static Keys keyPressed;
+        public static char keyPressed;
         Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> brick;
 
 
@@ -66,17 +66,16 @@ namespace _DionaeaMuscipula
 
         }
 
-        // handle key presses
-        private void onKeyPress(Object sender, KeyEventArgs e)
-        {
-            Console.WriteLine(e.ToString());
-            keyPressed = e.KeyCode;
-        }
-
         // reset key press info
         private void invalidateKeys(Object sender, KeyEventArgs e)
         {
-            keyPressed = Keys.None;
+            keyPressed = ' ';
+        }
+
+        private void onKeyPress(object sender, KeyPressEventArgs e)
+        {
+            Console.WriteLine(e.ToString());
+            keyPressed = e.KeyChar;
         }
     }
 }
