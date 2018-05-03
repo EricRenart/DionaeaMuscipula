@@ -42,6 +42,7 @@ namespace _DionaeaMuscipula
     {
         bool isActive;
         bool clawLock;
+        bool clawClosed;
         bool tauntPlayed;
         bool keyboardControl; // is keyboard control enabled?
         int lockElapsed = 0;
@@ -82,6 +83,7 @@ namespace _DionaeaMuscipula
             nxt = nxti;
             isActive = true;
             clawLock = false;
+            clawClosed = false;
             tauntPlayed = false;
             commandQueue = new Queue<MovementInfo>();
         }
@@ -145,7 +147,23 @@ namespace _DionaeaMuscipula
                 }
                 while (Form1.keyPressed == 'e')
                 {
-                    nxt.MotorC.On(-1 * SLEW_SPEED_CLAW);
+                    // close the claw manually
+                    if (!clawClosed)
+                    {
+                        nxt.MotorC.On(-1 * SLEW_SPEED_CLAW, 100);
+                        clawClosed = true;
+                    }
+                    else
+                    {
+                        // manual release of claw
+                        nxt.MotorC.On(SLEW_SPEED_CLAW, 100);
+                        clawClosed = false;
+                    }
+                    while (nxt.MotorC.IsRunning())
+                    {
+                        Thread.Sleep(100);
+                    }
+                    Form1.keyPressed = ' ';
                 }
                 if (Form1.keyPressed == 'r')
                 {
@@ -385,6 +403,7 @@ namespace _DionaeaMuscipula
                 }
             }
             commandQueue.Clear();
+            Form1.keyPressed = ' ';
         }
 
         private MovementInfo MovementToStart()
@@ -433,7 +452,7 @@ namespace _DionaeaMuscipula
 
             if (info.dC < 0)
             {
-                nxt.MotorC.On(-1 * SLEW_SPEED, (uint)(Math.Abs(info.dC)));
+                nxt.MotorC.On(-1 * SLEW_SPEED, (uint)(Math.Abs(info.dC))); // this hangs when dC gets too negative
             }
             else if (info.dC == 0)
             {
