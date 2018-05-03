@@ -9,6 +9,35 @@ using System.Windows.Forms;
 
 namespace _DionaeaMuscipula
 {
+
+    struct MovementInfo
+    {
+        public int dA;
+        public int dB;
+        public int dC;
+
+        public MovementInfo(int dAi, int dBi, int dCi)
+        {
+            dA = dAi;
+            dB = dBi;
+            dC = dCi;
+        }
+
+        public static MovementInfo Difference(MovementInfo m1, MovementInfo m2)
+        {
+            int ddA = m2.dA - m1.dA;
+            int ddB = m2.dB - m1.dB;
+            int ddC = m2.dC - m1.dC;
+            return new MovementInfo(ddA, ddB, ddC);
+        }
+
+        public string ToString()
+        {
+            return "--------------- \n dA: " + dA + "\ndB: "+dB+"\ndC: "+dC+"\n----------------";
+        }
+
+    }
+
     class RobotThread
     {
         bool isActive;
@@ -29,8 +58,8 @@ namespace _DionaeaMuscipula
 
         // Booleans
         const bool LIGHT_SENS_ENABLED = false;
-        bool SONAR_ENABLED = true;
-        const bool SONAR_TESTING_MODE = true;
+        bool SONAR_ENABLED = false;
+        const bool SONAR_TESTING_MODE = false;
         const bool BEGGING = false; // Change this to false to disable the periodic "Please, is anybody around" phrase
 
         // Ints
@@ -43,8 +72,10 @@ namespace _DionaeaMuscipula
         const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
         const int SLEW_SPEED = 30; // speed of the arm when it is slewn by the keyboard
         const int SLEW_SPEED_CLAW = 10;
-        
+
         // END MOVEMENT SETTINGS
+
+        Queue<MovementInfo> commandQueue;
 
         public RobotThread(Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar> nxti)
         {
@@ -52,20 +83,12 @@ namespace _DionaeaMuscipula
             isActive = true;
             clawLock = false;
             tauntPlayed = false;
+            commandQueue = new Queue<MovementInfo>();
         }
 
         public void start()
         {
-            // First connect
-            try
-            {
-                nxt.Connection.Open();
-            }
-            catch (MonoBrick.ConnectionException ce)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine(ce.InnerException);
-            };
+            nxt.Connection.Open();
 
             // load sensors
             nxt.Sensor1 = new TouchSensor();
@@ -75,12 +98,19 @@ namespace _DionaeaMuscipula
             int light1, light2 = 0;
             int sonar = 0;
 
-            nxt.PlaySoundFile("letmeshakehand.rso", false);
+            //nxt.PlaySoundFile("letmeshakehand.rso", false);
 
             // ----------- Main Loop ---------------
 
             while (isActive)
             {
+                // take motor's initial position
+                int dInitA = nxt.MotorA.GetTachoCount();
+                int dInitB = nxt.MotorB.GetTachoCount();
+                int dInitC = nxt.MotorC.GetTachoCount();
+                MovementInfo initialInfo = new MovementInfo(dInitA, dInitB, dInitC);
+                Console.WriteLine(initialInfo.ToString());
+
                 // read sensor data
                 if (LIGHT_SENS_ENABLED)
                 {
@@ -89,52 +119,35 @@ namespace _DionaeaMuscipula
                 }
                 if (SONAR_ENABLED)
                 {
-                    try
-                    {
-                        sonar = nxt.Sensor4.ReadDistance();
-                    }
-                    catch(MonoBrick.ConnectionException ce)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ce.InnerException);
-                        nxt.Connection.Close();
-                        nxt.Connection.Open();
-                    }
-                    catch(MonoBrick.MonoBrickException me)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.WriteLine(me.InnerException);
-                        nxt.Connection.Close();
-                        nxt.Connection.Open();
-                    }
+                    sonar = nxt.Sensor4.ReadDistance();
                 }
 
                 // get the current key pressed and move the arm appropriately
-                while(Form1.keyPressed == 'w')
+                while (Form1.keyPressed == 'w')
                 {
                     nxt.MotorB.On(SLEW_SPEED);
                 }
-                while(Form1.keyPressed == 'a')
+                while (Form1.keyPressed == 'a')
                 {
                     nxt.MotorA.On(SLEW_SPEED);
                 }
-                while(Form1.keyPressed == 's')
+                while (Form1.keyPressed == 's')
                 {
                     nxt.MotorB.On(-1 * SLEW_SPEED);
                 }
-                while(Form1.keyPressed == 'd')
+                while (Form1.keyPressed == 'd')
                 {
-                    nxt.MotorA.On(-1*SLEW_SPEED);
+                    nxt.MotorA.On(-1 * SLEW_SPEED);
                 }
-                while(Form1.keyPressed == 'q')
+                while (Form1.keyPressed == 'q')
                 {
                     nxt.MotorC.On(SLEW_SPEED_CLAW);
                 }
-                while(Form1.keyPressed == 'e')
+                while (Form1.keyPressed == 'e')
                 {
                     nxt.MotorC.On(-1 * SLEW_SPEED_CLAW);
                 }
-                if(Form1.keyPressed == 'r')
+                if (Form1.keyPressed == 'r')
                 {
                     if (!SONAR_ENABLED)
                     {
@@ -148,7 +161,7 @@ namespace _DionaeaMuscipula
                     }
                     Thread.Sleep(50); // de-bounce
                 }
-                if(Form1.keyPressed == (char)40)
+                if (Form1.keyPressed == (char)40)
                 {
                     SONAR_THRESHOLD--;
                     Console.WriteLine("Sonar threshold = " + SONAR_THRESHOLD + " cm");
@@ -159,6 +172,13 @@ namespace _DionaeaMuscipula
                     SONAR_THRESHOLD++;
                     Console.WriteLine("Sonar threshold = " + SONAR_THRESHOLD + " cm");
                     Thread.Sleep(50); // de-bounce
+                }
+                if(Form1.keyPressed == 'p')
+                {
+                    nxt.MotorA.Off();
+                    nxt.MotorB.Off();
+                    nxt.MotorC.Off();
+                    PlaybackMovements();
                 }
                 if (Form1.keyPressed == ' ')
                 {
@@ -205,12 +225,12 @@ namespace _DionaeaMuscipula
                         break;
                     }
                 }
-                
-                if(SONAR_TESTING_MODE)
+
+                if (SONAR_TESTING_MODE)
                 {
                     // test the sonar sensor without triggering arm wrestling
                     Console.WriteLine(sonar + "cm");
-                    if(sonar < SONAR_THRESHOLD)
+                    if (sonar < SONAR_THRESHOLD)
                     {
                         Console.WriteLine("*** TRIGGERED ***");
                         nxt.MotorC.On(-100);
@@ -222,10 +242,10 @@ namespace _DionaeaMuscipula
                 }
 
                 // 5 second grace period after the touch sensor is pressed (assuming this loop takes ~1ms to step)
-                if(clawLock)
+                if (clawLock)
                 {
                     lockElapsed++;
-                    if(lockElapsed >= CLAW_LOCK_INTERVAL)
+                    if (lockElapsed >= CLAW_LOCK_INTERVAL)
                     {
                         clawLock = false;
                         tauntPlayed = false;
@@ -236,11 +256,23 @@ namespace _DionaeaMuscipula
 
                 // beg for human contact every 30s or so
                 begTimerElapsed++;
-                if(begTimerElapsed >= BEG_INTERVAL && BEGGING)
+                if (begTimerElapsed >= BEG_INTERVAL && BEGGING)
                 {
                     nxt.PlaySoundFile("isanybodyaround.rso", false);
                     begTimerElapsed = 0;
                 }
+
+                // record the displacement of the motor since the start of this loop
+                int dFinalA = nxt.MotorA.GetTachoCount();
+                int dFinalB = nxt.MotorB.GetTachoCount();
+                int dFinalC = nxt.MotorC.GetTachoCount();
+
+                // calculate the displacement of the motors and store them in the queue
+                MovementInfo finalInfo = new MovementInfo(dFinalA, dFinalB, dFinalC);
+                MovementInfo displacement = MovementInfo.Difference(initialInfo, finalInfo);
+                Console.WriteLine(finalInfo.ToString());
+                Console.WriteLine(displacement.ToString());
+                commandQueue.Enqueue(displacement);
             }
 
             // --------- End Main Loop -------------
@@ -328,6 +360,60 @@ namespace _DionaeaMuscipula
             nxt.MotorA.On((sbyte)(lastX * 100), MOVEMENT_RANGE);
             nxt.MotorB.On((sbyte)(lastY * 100), MOVEMENT_RANGE);
             Thread.Sleep(movementDuration);
+        }
+
+        private void PlaybackMovements()
+        {
+            for (int i = 0; i < commandQueue.Count(); i++)
+            {
+                MovementInfo current = commandQueue.Dequeue();
+
+                if (current.dA < 0)
+                {
+                    nxt.MotorA.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dA)));
+                }
+                else if(current.dA == 0)
+                {
+                    nxt.MotorA.Off();
+                }
+                else
+                {
+                    nxt.MotorA.On(SLEW_SPEED, (uint)current.dA);
+                }
+
+                if (current.dB < 0)
+                {
+                    nxt.MotorB.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dB)));
+                }
+                else if(current.dB == 0)
+                {
+                    nxt.MotorB.Off();
+                }
+                else
+                {
+                    nxt.MotorB.On(SLEW_SPEED, (uint)current.dB);
+                }
+
+                if (current.dC < 0)
+                {
+                    nxt.MotorC.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dC)));
+                }
+                else if(current.dC == 0)
+                {
+                    nxt.MotorC.Off();
+                }
+                else
+                {
+                    nxt.MotorC.On(SLEW_SPEED, (uint)current.dC);
+                }
+
+                while(nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
+                {
+                    Thread.Sleep(1);
+                }
+                
+            }
+            commandQueue.Clear();
         }
 }
 }
