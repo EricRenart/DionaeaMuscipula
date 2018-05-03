@@ -42,7 +42,6 @@ namespace _DionaeaMuscipula
     {
         bool isActive;
         bool clawLock;
-        bool clawClosed;
         bool tauntPlayed;
         bool keyboardControl; // is keyboard control enabled?
         int lockElapsed = 0;
@@ -58,20 +57,22 @@ namespace _DionaeaMuscipula
          */
 
         // Booleans
-        const bool LIGHT_SENS_ENABLED = false;
-        bool SONAR_ENABLED = false;
+        bool SONAR_ENABLED = true;
         const bool SONAR_TESTING_MODE = false;
+        bool WRESTLING_ENABLED = false;
         const bool BEGGING = false; // Change this to false to disable the periodic "Please, is anybody around" phrase
+        bool HOLDING_OBJECT = false;
 
         // Ints
-        const int LIGHT_DIFF = 2; //difference between light sensor values in order for the arm to move in a direction
-        int SONAR_THRESHOLD = 12; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
+        int SONAR_THRESHOLD = 22; // minimum distance in centimenters the hand (or other object) must be from the claw in order for it to snap shut
         const int CLAW_LOCK_INTERVAL = 25; // lock the claw for ~5 sec after hand is freed via touch sensor
         const int BEG_INTERVAL = 150; // beg for human contact every ~30s by playing an rso
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 100; // number of random movements the robot arm will make when it enters "wrestle mode"
-        const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
+        const int MOVEMENT_RANGE = 500; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
         const int SLEW_SPEED = 15; // speed of the arm when it is slewn by the keyboard
+        const int WRESTLE_GRIP_STRENGTH = 100;
+        const int GRAB_STRENGTH = 50;
         const int SLEW_SPEED_CLAW = 10;
 
         // END MOVEMENT SETTINGS
@@ -83,7 +84,6 @@ namespace _DionaeaMuscipula
             nxt = nxti;
             isActive = true;
             clawLock = false;
-            clawClosed = false;
             tauntPlayed = false;
             commandQueue = new Queue<MovementInfo>();
         }
@@ -94,13 +94,10 @@ namespace _DionaeaMuscipula
 
             // load sensors
             nxt.Sensor1 = new TouchSensor();
-            nxt.Sensor2 = new NXTLightSensor(LightMode.Off);
-            nxt.Sensor3 = new NXTLightSensor(LightMode.Off);
             nxt.Sensor4 = new Sonar();
-            int light1, light2 = 0;
             int sonar = 0;
 
-            //nxt.PlaySoundFile("letmeshakehand.rso", false);
+            nxt.PlaySoundFile("letmeshakehand.rso", false);
 
             // ----------- Main Loop ---------------
 
@@ -113,15 +110,13 @@ namespace _DionaeaMuscipula
                 MovementInfo initialInfo = new MovementInfo(dInitA, dInitB, dInitC);
                 //Console.WriteLine(initialInfo.ToString());
 
-                // read sensor data
-                if (LIGHT_SENS_ENABLED)
-                {
-                    light1 = nxt.Sensor2.ReadLightLevel();
-                    light2 = nxt.Sensor3.ReadLightLevel();
-                }
                 if (SONAR_ENABLED)
                 {
                     sonar = nxt.Sensor4.ReadDistance();
+                    if (!SONAR_TESTING_MODE)
+                    {
+                        Console.WriteLine("Sonar: " + sonar);
+                    }
                 }
 
                 // get the current key pressed and move the arm appropriately
@@ -148,19 +143,19 @@ namespace _DionaeaMuscipula
                 while (Form1.keyPressed == 'e')
                 {
                     // close the claw manually
-                    if (!clawClosed)
+                    if (!HOLDING_OBJECT)
                     {
+                        HOLDING_OBJECT = true;
                         nxt.MotorC.On(-15);
                         Thread.Sleep(1000);
-                        clawClosed = true;
                         nxt.MotorC.Off();
                     }
                     else
                     {
                         // manual release of claw
+                        HOLDING_OBJECT = false;
                         nxt.MotorC.On(15);
                         Thread.Sleep(1000);
-                        clawClosed = false;
                         nxt.MotorC.Off();
                     }
  
@@ -205,43 +200,30 @@ namespace _DionaeaMuscipula
                     nxt.MotorB.Off();
                     nxt.MotorC.Off();
                 }
-
-
-                if (LIGHT_SENS_ENABLED)
+                 
+                // Capture the hand if it is within the capture interval and the claw is not locked.
+                if (SONAR_ENABLED && WRESTLING_ENABLED && !SONAR_TESTING_MODE)
                 {
-                    // for debugging purposes
-                    Console.WriteLine("[" + light1 + "]------[" + light2 + "]");
 
-                    // if the left light sensor reading exceeds the right light sensor reading, move right
-                    if (light1 - light2 >= LIGHT_DIFF)
+                    if (sonar <= SONAR_THRESHOLD && !HOLDING_OBJECT)
                     {
-                        nxt.MotorA.On(-30);
-                    }
-
-                    // if the right light sensor reading exceeds the left light sensor reading, move left
-                    if (light2 - light1 >= LIGHT_DIFF)
-                    {
-                        nxt.MotorA.On(30);
-                    }
-
-
-                    // if the difference between sensor values is less than the threshold stop the motor
-                    if (Math.Abs(light2 - light1) <= LIGHT_DIFF)
-                    {
-                        nxt.MotorA.Off();
+                        nxt.MotorC.On(-1*WRESTLE_GRIP_STRENGTH);
+                        HOLDING_OBJECT = true;
+                        ArmWrestle(ARM_WRESTLE_INTERVAL, NUMBER_OF_ARM_MOVEMENTS);
+                        nxt.MotorC.On(WRESTLE_GRIP_STRENGTH);
+                        Thread.Sleep(1000);
+                        WRESTLING_ENABLED = false;
                     }
                 }
-
-                // Capture the hand if it is within the capture interval and the claw is not locked.
-                if (SONAR_ENABLED && !SONAR_TESTING_MODE)
+                else if(SONAR_ENABLED && !WRESTLING_ENABLED && !SONAR_TESTING_MODE)
                 {
-
-                    if (sonar < SONAR_THRESHOLD && !clawLock)
+                    if (sonar <= SONAR_THRESHOLD && !HOLDING_OBJECT)
                     {
-                        nxt.MotorC.On(-50);
-                        ArmWrestle(ARM_WRESTLE_INTERVAL, NUMBER_OF_ARM_MOVEMENTS);
-                        nxt.MotorC.On(50);
-                        break;
+                        // simply grab object without wrestling
+                        nxt.MotorC.On(-1 * GRAB_STRENGTH);
+                        HOLDING_OBJECT = true;
+                        Thread.Sleep(500);
+                        nxt.MotorC.Brake();
                     }
                 }
 
@@ -249,14 +231,14 @@ namespace _DionaeaMuscipula
                 {
                     // test the sonar sensor without triggering arm wrestling
                     Console.WriteLine(sonar + "cm");
-                    if (sonar < SONAR_THRESHOLD)
+                    if (sonar <= SONAR_THRESHOLD)
                     {
                         Console.WriteLine("*** TRIGGERED ***");
-                        nxt.MotorC.On(-100);
-                        Thread.Sleep(2000);
-                        nxt.MotorC.On(100);
-                        Thread.Sleep(500);
-                        nxt.MotorC.Off();
+                        //nxt.MotorC.On(-100);
+                       // Thread.Sleep(2000);
+                       // nxt.MotorC.On(100);
+                        //Thread.Sleep(500);
+                        //nxt.MotorC.Off();
                     }
                 }
 
