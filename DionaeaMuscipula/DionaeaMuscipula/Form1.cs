@@ -28,7 +28,7 @@ namespace _DionaeaMuscipula
         public Form1()
         {
             InitializeComponent();
-            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(SURF_PRO); // set connection option here
+            brick = new Brick<TouchSensor, NXTLightSensor, NXTLightSensor, Sonar>(DORM_PC); // set connection option here
             this.KeyPreview = true;
         }
         
@@ -74,7 +74,6 @@ namespace _DionaeaMuscipula
 
         private void onKeyPress(object sender, KeyPressEventArgs e)
         {
-            Console.WriteLine(e.ToString());
             keyPressed = e.KeyChar;
         }
     }

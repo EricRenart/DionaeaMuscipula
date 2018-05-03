@@ -70,7 +70,7 @@ namespace _DionaeaMuscipula
         const int ARM_WRESTLE_INTERVAL = 150; // total duration of the random arm movement in "wrestle mode"
         const int NUMBER_OF_ARM_MOVEMENTS = 100; // number of random movements the robot arm will make when it enters "wrestle mode"
         const int MOVEMENT_RANGE = 60; // number of degrees the robot arm is limited to moving to in a direction during the arm wrestling 
-        const int SLEW_SPEED = 30; // speed of the arm when it is slewn by the keyboard
+        const int SLEW_SPEED = 15; // speed of the arm when it is slewn by the keyboard
         const int SLEW_SPEED_CLAW = 10;
 
         // END MOVEMENT SETTINGS
@@ -109,7 +109,7 @@ namespace _DionaeaMuscipula
                 int dInitB = nxt.MotorB.GetTachoCount();
                 int dInitC = nxt.MotorC.GetTachoCount();
                 MovementInfo initialInfo = new MovementInfo(dInitA, dInitB, dInitC);
-                Console.WriteLine(initialInfo.ToString());
+                //Console.WriteLine(initialInfo.ToString());
 
                 // read sensor data
                 if (LIGHT_SENS_ENABLED)
@@ -270,9 +270,10 @@ namespace _DionaeaMuscipula
                 // calculate the displacement of the motors and store them in the queue
                 MovementInfo finalInfo = new MovementInfo(dFinalA, dFinalB, dFinalC);
                 MovementInfo displacement = MovementInfo.Difference(initialInfo, finalInfo);
-                Console.WriteLine(finalInfo.ToString());
-                Console.WriteLine(displacement.ToString());
+                //Console.WriteLine(finalInfo.ToString());
+                //Console.WriteLine(displacement.ToString());
                 commandQueue.Enqueue(displacement);
+                Console.WriteLine("Queue Length: " + commandQueue.Count());
             }
 
             // --------- End Main Loop -------------
@@ -361,59 +362,83 @@ namespace _DionaeaMuscipula
             nxt.MotorB.On((sbyte)(lastY * 100), MOVEMENT_RANGE);
             Thread.Sleep(movementDuration);
         }
-
+        
         private void PlaybackMovements()
         {
+            // move to the start
+            MovementInfo toStart = MovementToStart();
+            MoveFromInfo(toStart);
+
             for (int i = 0; i < commandQueue.Count(); i++)
             {
                 MovementInfo current = commandQueue.Dequeue();
-
-                if (current.dA < 0)
-                {
-                    nxt.MotorA.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dA)));
-                }
-                else if(current.dA == 0)
-                {
-                    nxt.MotorA.Off();
-                }
-                else
-                {
-                    nxt.MotorA.On(SLEW_SPEED, (uint)current.dA);
-                }
-
-                if (current.dB < 0)
-                {
-                    nxt.MotorB.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dB)));
-                }
-                else if(current.dB == 0)
-                {
-                    nxt.MotorB.Off();
-                }
-                else
-                {
-                    nxt.MotorB.On(SLEW_SPEED, (uint)current.dB);
-                }
-
-                if (current.dC < 0)
-                {
-                    nxt.MotorC.On(-1 * SLEW_SPEED, (uint)(Math.Abs(current.dC)));
-                }
-                else if(current.dC == 0)
-                {
-                    nxt.MotorC.Off();
-                }
-                else
-                {
-                    nxt.MotorC.On(SLEW_SPEED, (uint)current.dC);
-                }
-
-                while(nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
-                {
-                    Thread.Sleep(1);
-                }
-                
+                MoveFromInfo(current);
+                Console.WriteLine("Queue Length: " + commandQueue.Count());
             }
             commandQueue.Clear();
+        }
+
+        private MovementInfo MovementToStart()
+        {
+            int dCA = 0;
+            int dCB = 0;
+            int dCC = 0;
+            MovementInfo[] queueArray = commandQueue.ToArray();
+            for(int i = 0; i < queueArray.Length; i++)
+            {
+                MovementInfo info = queueArray[i];
+                dCA += info.dA;
+                dCB += info.dB;
+                dCC += info.dC;
+            }
+            return new MovementInfo(-1*dCA, -1*dCB, -1*dCC);
+        }
+
+        private void MoveFromInfo(MovementInfo info)
+        {
+            if (info.dA < 0)
+            {
+                nxt.MotorA.On(-1 * SLEW_SPEED, (uint)(Math.Abs(info.dA)));
+            }
+            else if (info.dA == 0)
+            {
+                nxt.MotorA.Off();
+            }
+            else
+            {
+                nxt.MotorA.On(SLEW_SPEED, (uint)info.dA);
+            }
+
+            if (info.dB < 0)
+            {
+                nxt.MotorB.On(-1 * SLEW_SPEED, (uint)(Math.Abs(info.dB)));
+            }
+            else if (info.dB == 0)
+            {
+                nxt.MotorB.Off();
+            }
+            else
+            {
+                nxt.MotorB.On(SLEW_SPEED, (uint)info.dB);
+            }
+
+            if (info.dC < 0)
+            {
+                nxt.MotorC.On(-1 * SLEW_SPEED, (uint)(Math.Abs(info.dC)));
+            }
+            else if (info.dC == 0)
+            {
+                nxt.MotorC.Off();
+            }
+            else
+            {
+                nxt.MotorC.On(SLEW_SPEED, (uint)info.dC);
+            }
+
+            while (nxt.MotorA.IsRunning() || nxt.MotorB.IsRunning() || nxt.MotorC.IsRunning())
+            {
+                Thread.Sleep(1);
+            }
         }
 }
 }
