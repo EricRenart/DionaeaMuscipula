@@ -59,7 +59,7 @@ namespace _DionaeaMuscipula
         // Booleans
         bool SONAR_ENABLED = true;
         const bool SONAR_TESTING_MODE = false;
-        bool WRESTLING_ENABLED = false;
+        bool WRESTLING_ENABLED = true;
         const bool BEGGING = false; // Change this to false to disable the periodic "Please, is anybody around" phrase
         bool HOLDING_OBJECT = false;
 
